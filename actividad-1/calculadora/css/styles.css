@@ -1,0 +1,83 @@
+body 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #d0d0d0e1;
+    min-height: 100vh;
+}
+
+/* Estilo de la calculadora */
+.calculadora 
+{
+    border: 1px solid #000;
+    background: #fffefe;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    padding: 18px 12px 24px 12px;
+}
+
+.display
+{
+    text-align: right;
+    height: 30px;
+    color: #000;
+    border: 1px solid #000;
+}
+.vestimenta-boton-borrar
+{
+    color: white;
+    font-family: arial;
+    font-weight: bold;
+    font-size: 70%;
+
+    background-color: red;
+    box-shadow: 0px 5px #BB3E22;
+
+    width: 100%;
+    height: 30px;
+
+    border-radius: 6px;
+    border-color: #BB3E22;      
+}
+
+.numeros 
+{
+    background: #4285f4;
+    color: #fff;
+    font-size: 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 3px #2a56c6;
+    width: 30 px;
+    height: 30 px;
+    margin: 6px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+
+.operaciones
+{
+        background: #31b610;
+    color: #fff;
+    font-size: 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 3px #2a56c6;
+    width: 30 px;
+    height: 30 px;
+    margin: 6px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.igual
+{
+    background: #fbbc05;
+    color: #fff;
+    font-size: 1.2em;
+    border-radius: 8px;
+    box-shadow: 0 3px #2a56c6;
+    width: 30 px;
+    height: 30 px;
+    margin: 6px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+}
