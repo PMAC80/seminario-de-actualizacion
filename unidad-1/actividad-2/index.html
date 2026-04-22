@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Calculadora</title>
+	<style>
+		table, tr, td
+		{
+			border: 1px solid white;
+			border-collapse: collapse;
+		}
+
+		.btnDelete
+		{
+			color: white;
+			font-family: arial;
+			font-weight: bold;
+			font-size: 70%;
+			background-color: red;
+			box-shadow: 0px 5px #BB3E22;
+			width: 100%;
+			height: 30px;
+			border-radius: 6px;
+			border-color: #BB3E22;
+		}
+	</style>
+</head>
+
+<body>
+</body>
+
+<script>
+
+class CalculadoraForm extends HTMLElement
+{
+	constructor()
+	{
+		//Acá hay que instanciar en primer lugar (siempre) la clase base.
+        super();
+		//conecti y disconectic 
+		// Tabla y estructura...
+		this.table = document.createElement('table');
+        // Filas
+		this.tr1 = document.createElement('tr');
+		this.tr2 = document.createElement('tr');
+		this.tr3 = document.createElement('tr');
+		this.tr4 = document.createElement('tr');
+		this.tr5 = document.createElement('tr');
+
+		// Display 
+		this.tdDisplay = document.createElement('td');
+
+		this.td7 = document.createElement('td');
+		this.td8 = document.createElement('td');
+		this.td9 = document.createElement('td');
+		this.tdPlus = document.createElement('td');
+
+		this.td4 = document.createElement('td');
+		this.td5 = document.createElement('td');
+		this.td6 = document.createElement('td');
+		this.tdMinus = document.createElement('td');
+
+		this.td3 = document.createElement('td');
+		this.td2 = document.createElement('td');
+		this.td1 = document.createElement('td');
+		this.tdMultiply = document.createElement('td');
+
+		this.td0 = document.createElement('td');
+		this.tdDot = document.createElement('td');
+		this.tdResult = document.createElement('td');
+		this.tdDivide = document.createElement('td');
+
+		this.tdDelete = document.createElement('td');
+
+		// Display
+		this.display = document.createElement('input');
+		this.display.type = 'text';
+		this.display.disabled = true;
+
+		// Botones
+		this.btn0 = document.createElement('button');
+		this.btn1 = document.createElement('button');
+		this.btn2 = document.createElement('button');
+		this.btn3 = document.createElement('button');
+		this.btn4 = document.createElement('button');
+		this.btn5 = document.createElement('button');
+		this.btn6 = document.createElement('button');
+		this.btn7 = document.createElement('button');
+		this.btn8 = document.createElement('button');
+		this.btn9 = document.createElement('button');
+		this.btnDot = document.createElement('button');
+		this.btnPlus = document.createElement('button');
+		this.btnMinus = document.createElement('button');
+		this.btnMultiply = document.createElement('button');
+		this.btnDivide = document.createElement('button');
+		this.btnResult = document.createElement('button');
+		this.btnDelete = document.createElement('button');
+
+		// Texto botones
+		this.btn0.innerText = '0';
+		this.btn1.innerText = '1';
+		this.btn2.innerText = '2';
+		this.btn3.innerText = '3';
+		this.btn4.innerText = '4';
+		this.btn5.innerText = '5';
+		this.btn6.innerText = '6';
+		this.btn7.innerText = '7';
+		this.btn8.innerText = '8';
+		this.btn9.innerText = '9';
+		this.btnDot.innerText = '.';
+		this.btnPlus.innerText = '+';
+		this.btnMinus.innerText = '-';
+		this.btnMultiply.innerText = '*';
+		this.btnDivide.innerText = '/';
+		this.btnResult.innerText = '=';
+		this.btnDelete.innerText = 'Borrar';
+
+		this.btnDelete.className = 'btnDelete';
+
+		// Colspan
+		this.tdDisplay.colSpan = 4;
+		this.tdDelete.colSpan = 4;
+
+		// Armar fila display
+		this.tdDisplay.appendChild(this.display);
+		this.tr1.appendChild(this.tdDisplay);
+
+		// Fila 7 8 9 +
+		this.td7.appendChild(this.btn7);
+		this.td8.appendChild(this.btn8);
+		this.td9.appendChild(this.btn9);
+		this.tdPlus.appendChild(this.btnPlus);
+
+		this.tr2.appendChild(this.td7);
+		this.tr2.appendChild(this.td8);
+		this.tr2.appendChild(this.td9);
+		this.tr2.appendChild(this.tdPlus);
+
+		// Fila 4 5 6 -
+		this.td4.appendChild(this.btn4);
+		this.td5.appendChild(this.btn5);
+		this.td6.appendChild(this.btn6);
+		this.tdMinus.appendChild(this.btnMinus);
+
+		this.tr3.appendChild(this.td4);
+		this.tr3.appendChild(this.td5);
+		this.tr3.appendChild(this.td6);
+		this.tr3.appendChild(this.tdMinus);
+
+		// Fila 3 2 1 *
+		this.td3.appendChild(this.btn3);
+		this.td2.appendChild(this.btn2);
+		this.td1.appendChild(this.btn1);
+		this.tdMultiply.appendChild(this.btnMultiply);
+
+		this.tr4.appendChild(this.td3);
+		this.tr4.appendChild(this.td2);
+		this.tr4.appendChild(this.td1);
+		this.tr4.appendChild(this.tdMultiply);
+
+		// Fila 0 . = /
+		this.td0.appendChild(this.btn0);
+		this.tdDot.appendChild(this.btnDot);
+		this.tdResult.appendChild(this.btnResult);
+		this.tdDivide.appendChild(this.btnDivide);
+
+		this.tr5.appendChild(this.td0);
+		this.tr5.appendChild(this.tdDot);
+		this.tr5.appendChild(this.tdResult);
+		this.tr5.appendChild(this.tdDivide);
+
+		// Fila borrar
+		this.tdDelete.appendChild(this.btnDelete);
+
+		this.tr6 = document.createElement('tr');
+		this.tr6.appendChild(this.tdDelete);
+
+		// Agregar filas a tabla
+		this.table.appendChild(this.tr1);
+		this.table.appendChild(this.tr2);
+		this.table.appendChild(this.tr3);
+		this.table.appendChild(this.tr4);
+		this.table.appendChild(this.tr5);
+		this.table.appendChild(this.tr6);
+
+		// Agregar tabla al componente
+		this.appendChild(this.table);
+	}
+
+	onBtn0Click() { this.display.value += '0'; }
+	onBtn1Click() { this.display.value += '1'; }
+	onBtn2Click() { this.display.value += '2'; }
+	onBtn3Click() { this.display.value += '3'; }
+	onBtn4Click() { this.display.value += '4'; }
+	onBtn5Click() { this.display.value += '5'; }
+	onBtn6Click() { this.display.value += '6'; }
+	onBtn7Click() { this.display.value += '7'; }
+	onBtn8Click() { this.display.value += '8'; }
+	onBtn9Click() { this.display.value += '9'; }
+
+	onBtnDotClick() { this.display.value += '.'; }
+	onBtnPlusClick() { this.display.value += '+'; }
+	onBtnMinusClick() { this.display.value += '-'; }
+	onBtnMultiplyClick() { this.display.value += '*'; }
+	onBtnDivideClick() { this.display.value += '/'; }
+
+	onBtnResultClick()
+	{
+		this.display.value = eval(this.display.value);
+	}
+
+	onBtnDeleteClick()
+	{
+		this.display.value = '';
+	}
+
+	connectedCallback()
+	{
+		this.btn0.onclick = () => this.onBtn0Click();
+		this.btn1.onclick = () => this.onBtn1Click();
+		this.btn2.onclick = () => this.onBtn2Click();
+		this.btn3.onclick = () => this.onBtn3Click();
+		this.btn4.onclick = () => this.onBtn4Click();
+		this.btn5.onclick = () => this.onBtn5Click();
+		this.btn6.onclick = () => this.onBtn6Click();
+		this.btn7.onclick = () => this.onBtn7Click();
+		this.btn8.onclick = () => this.onBtn8Click();
+		this.btn9.onclick = () => this.onBtn9Click();
+
+		this.btnDot.onclick = () => this.onBtnDotClick();
+		this.btnPlus.onclick = () => this.onBtnPlusClick();
+		this.btnMinus.onclick = () => this.onBtnMinusClick();
+		this.btnMultiply.onclick = () => this.onBtnMultiplyClick();
+		this.btnDivide.onclick = () => this.onBtnDivideClick();
+
+		this.btnResult.onclick = () => this.onBtnResultClick();
+		this.btnDelete.onclick = () => this.onBtnDeleteClick();
+	}
+
+	disconnectedCallback()
+	{
+		this.btn0.onclick = null;
+		this.btn1.onclick = null;
+		this.btn2.onclick = null;
+		this.btn3.onclick = null;
+		this.btn4.onclick = null;
+		this.btn5.onclick = null;
+		this.btn6.onclick = null;
+		this.btn7.onclick = null;
+		this.btn8.onclick = null;
+		this.btn9.onclick = null;
+
+		this.btnDot.onclick = null;
+		this.btnPlus.onclick = null;
+		this.btnMinus.onclick = null;
+		this.btnMultiply.onclick = null;
+		this.btnDivide.onclick = null;
+
+		this.btnResult.onclick = null;
+		this.btnDelete.onclick = null;
+	}
+}
+
+customElements.define('x-calculadora', CalculadoraForm);
+
+function main()
+{
+	let miCalculadora = new CalculadoraForm();
+	document.body.appendChild(miCalculadora);
+}
+
+window.onload = main;
+
+</script>
+
+</html>
