@@ -1,0 +1,84 @@
+<!--
+1. Construya un programa que solicite al usuario el nombre, 
+luego el apellido y finalmente muestre un saludo como el siguiente:
+¡Buenos días APELLIDO, Nombre!. 
+Teniendo en cuenta que el apellido aparezca completamente 
+en mayúsculas y el nombre con la mayúscula en la primera letra. 
+Independientemente de cómo sea recibidas las cadenas de texto.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoodMorning</title>
+</head>
+<body>
+    
+</body>
+<script>
+    class GoodMorning extends HTMLElement
+    {
+        constructor()
+        {
+            super();
+
+            this.name = document.createElement('input');      
+            this.surname = document.createElement('input');   
+            this.button = document.createElement('button');   
+            this.display = document.createElement('p');      
+            
+            this.name.type = 'text';                          
+            this.surname.type = 'text';                       
+
+            this.name.placeholder = 'Ingrese su nombre';      
+            this.surname.placeholder = 'Ingrese su apellido';
+            this.button.innerText = 'Saludar';                
+
+            this.appendChild(this.surname);
+            this.appendChild(this.name);
+            this.appendChild(this.button);
+            this.appendChild(this.display);
+        }
+        
+        onButtonClick()
+        {
+            let nombreIngresado = this.name.value;
+            let apellidoIngresado = this.surname.value;
+
+            if (nombreIngresado === "" || apellidoIngresado === "") {
+                this.display.innerText = "ERROR";
+                return; 
+            }
+            
+            let apellidoAjustado = apellidoIngresado.toUpperCase();
+
+            let nombreAjustado = nombreIngresado.charAt(0).toUpperCase() + nombreIngresado.slice(1).toLowerCase();
+
+            this.display.innerText = `¡Buenos días ${apellidoAjustado}, ${nombreAjustado}!`;
+        }
+
+        connectedCallback()
+        {
+            this.button.onclick = () => this.onButtonClick();
+        }
+
+        disconnectedCallback()
+        {
+            this.button.onclick = null;
+        }
+    }
+
+    customElements.define('x-goodmorning', GoodMorning);
+
+    function main()
+    {
+        let miComponente = new GoodMorning();
+        document.body.appendChild(miComponente);
+    }
+
+    window.onload = main;
+
+</script>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Equalizer</title>
+    <style>
+    </style>
+</head>
+<body></body>
+<script>
+    class Equalizer extends HTMLElement {
+        constructor() {
+            super();
+            
+            this.datos = 
+            [
+                { frequency: '32Hz', valor: 0 }, 
+                { frequency: '64Hz', valor: 0 },
+                { frequency: '130Hz', valor: 0 }, 
+                { frequency: '260Hz', valor: 0 },
+                { frequency: '500Hz', valor: 0 }, 
+                { frequency: '1k', valor: 0 },
+                { frequency: '2k', valor: 0 }, 
+                { frequency: '4k', valor: 0 },
+                { frequency: '8.3k', valor: 0 }, 
+                { frequency: '16.5k', valor: 0 }
+            ];
+
+            this._sliders = [];
+            this._labels = [];
+
+            for (let i = 0; i < 10; i++) 
+            {
+                const contenedor = document.createElement('div');
+
+                const freq = document.createElement('span');
+                freq.innerText = this.datos[i].frequency;
+
+                const slider = document.createElement('input');
+                slider.type = 'range';
+                slider.value = this.datos[i].valor;          
+                const label = document.createElement('span');
+                label.innerText = this.datos[i].valor;
+
+                contenedor.appendChild(freq);
+                contenedor.appendChild(slider);
+                contenedor.appendChild(label);
+                this.appendChild(contenedor);
+
+                this._sliders.push(slider);
+                this._labels.push(label);
+
+            }
+
+            this._onSliderInput = this._onSliderInput.bind(this);
+        }
+
+        _onSliderInput(e) 
+        {
+            const i = this._sliders.indexOf(e.target);
+            this._labels[i].innerText = e.target.value;
+            this.datos[i].valor = e.target.value;
+        }
+
+        connectedCallback() 
+        {
+            this._sliders.forEach(slider => 
+            {
+                slider.oninput = this._onSliderInput;
+            });
+        }
+
+        disconnectedCallback() { 
+            this._sliders.forEach(slider => 
+            { 
+                slider.oninput = null;
+            });
+        }
+
+        getData() { return this.datos; }
+
+        setData(nuevosDatos) 
+        {
+            this.datos = nuevosDatos;
+            for (let i = 0; i < 10; i++) 
+            {
+                this._sliders[i].value = this.datos[i].valor;
+                this._labels[i].innerText = this.datos[i].valor;
+            }
+        }
+    }
+
+    customElements.define('x-equalizer', Equalizer);
+
+    window.onload = () => 
+    {
+        document.body.appendChild(new Equalizer());
+    };
+</script>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chat</title>
+<style>
+
+body {
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+
+.time-right {
+    float: right;
+    color: #999;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
+
+</style>
+<script>
+class ChatComponent extends HTMLElement
+{
+    constructor()
+    {
+        super();
+
+        this.chatContainer = document.createElement('div');
+        this.chatTitle = document.createElement('h2');
+        this.chatTitle.innerText = 'Chat Messages';
+        this.chatContainer.appendChild(this.chatTitle);
+        this.iniciado = false;
+    }
+
+    connectedCallback()
+    {
+        if(this.iniciado)
+            {
+                return;
+            }
+        this.iniciado = true;
+        this.appendChild(this.chatContainer);
+    }
+
+    addMessage(texto, hora, oscuro = false)
+    {
+        const mensaje = document.createElement('div');
+
+        if(oscuro)
+            {
+                mensaje.className = 'container darker';
+            }
+        else
+            {
+                mensaje.className = 'container';
+            }
+
+        const parrafo = document.createElement('p');
+        parrafo.innerText = texto;
+        const tiempo = document.createElement('span');
+
+        if(oscuro)
+            {
+                tiempo.className = 'time-left';
+            }
+        else
+            {
+                tiempo.className = 'time-right';
+            }
+
+        tiempo.innerText = hora;
+        mensaje.appendChild(parrafo);
+        mensaje.appendChild(tiempo);
+        this.chatContainer.appendChild(mensaje);
+    }
+}
+customElements.define('x-chat', ChatComponent);
+window.onload = () =>
+    {
+        const chat = document.createElement('x-chat');
+        document.body.appendChild(chat);
+        chat.addMessage('Hola. ¿Cómo estás?', '11:00');
+        chat.addMessage('Todo bien.', '11:01', true);
+        chat.addMessage('¿Programando WebComponents?', '11:02');
+        chat.addMessage('Sí, intentando entenderlos.', '11:05', true);
+    };
+</script>
+</head>
+<body></body>
+</html>

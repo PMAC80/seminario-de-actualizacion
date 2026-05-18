@@ -38,8 +38,8 @@ class CalculadoraForm extends HTMLElement
 	{
 		//Acá hay que instanciar en primer lugar (siempre) la clase base.
         super();
-		//conecti y disconectic 
 		// Tabla y estructura...
+		// createElement es un método del DOM que permite crear un nuevo elemento HTML. En este caso, se está creando una tabla para organizar los botones y la pantalla de la calculadora.
 		this.table = document.createElement('table');
         // Filas
 		this.tr1 = document.createElement('tr');
@@ -47,10 +47,9 @@ class CalculadoraForm extends HTMLElement
 		this.tr3 = document.createElement('tr');
 		this.tr4 = document.createElement('tr');
 		this.tr5 = document.createElement('tr');
-
-		// Display 
+		//lugar de display
 		this.tdDisplay = document.createElement('td');
-
+		//columnas
 		this.td7 = document.createElement('td');
 		this.td8 = document.createElement('td');
 		this.td9 = document.createElement('td');
@@ -70,10 +69,10 @@ class CalculadoraForm extends HTMLElement
 		this.tdDot = document.createElement('td');
 		this.tdResult = document.createElement('td');
 		this.tdDivide = document.createElement('td');
-
+		// Borrar
 		this.tdDelete = document.createElement('td');
 
-		// Display
+		// Display (creación e instanciación)	
 		this.display = document.createElement('input');
 		this.display.type = 'text';
 		this.display.disabled = true;

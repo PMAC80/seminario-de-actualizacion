@@ -1,0 +1,82 @@
+<!--
+2. Construya un programa que solicite al usuario :
+su fecha de nacimiento y que luego valide si la cadena de texto 
+ingresada es realmente una fecha. 
+En caso de que no, deberá mostrar un mensaje de error notificando 
+que el texto suministrado es inválido y que vuelva a pedir 
+la fecha hasta que sea válida. Cada error deberá incluir el 
+número de reintentos.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ValidadorDeFechas</title>
+</head>
+<body>
+    
+</body>
+<script>    
+    class ValidadorDeFechas extends HTMLElement
+    {
+        constructor()
+            {
+                super();
+                
+                this.dateInput = document.createElement('input');
+                this.button = document.createElement('button');
+                this.result = document.createElement('p');
+                this.reintentos = 0;
+                
+                this.dateInput.type = 'text';
+                this.dateInput.placeholder = 'Ingrese su fecha de nacimiento';
+                this.button.innerText = 'Validar';
+                this.result.innerText = '';
+                
+                this.appendChild(this.dateInput);
+                this.appendChild(this.button);
+                this.appendChild(this.result);
+            }   
+
+        onButtonClick()
+            {
+                let textoIngresado = this.dateInput.value;
+                let fecha = new Date(textoIngresado);
+
+                if (textoIngresado === "" || isNaN(fecha.getTime())) 
+                    {
+                        this.reintentos++;
+                        this.result.innerText = `El texto suministrado es inválido. Reintentos: ${this.reintentos}`;
+                        this.dateInput.value = ""; 
+                    } 
+                else 
+                    {
+                        this.result.innerText = `Fecha válida ingresada: ${textoIngresado}`;
+                        this.reintentos = 0; 
+                    }
+            }
+
+        connectedCallback()
+            {
+                this.button.onclick = () => this.onButtonClick();
+            }
+
+        disconnectedCallback()
+            {
+                this.button.onclick = null;
+            }
+    }
+
+    customElements.define('x-validador-fechas', ValidadorDeFechas);
+
+    function main()
+        {
+            let miComponente = new ValidadorDeFechas();
+            document.body.appendChild(miComponente);
+        }
+
+    window.onload = main;
+</script>
+</html>
