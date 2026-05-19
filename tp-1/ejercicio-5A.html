@@ -1,5 +1,5 @@
-/* Desarrolle un WebComponent tipo "Formulario" que le permita cargar toda la información pertinente de la factura de AFIP adjuntada. Este WebComponent deberá tener un botón "Generar factura" que deberá abrir una pestaña nueva con una gráfica del diseño de la factura solicitada.
-*/
+<!-- Desarrolle un WebComponent tipo "Formulario" que le permita cargar toda la información pertinente de la factura de AFIP adjuntada. Este WebComponent deberá tener un botón "Generar factura" que deberá abrir una pestaña nueva con una gráfica del diseño de la factura solicitada.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,6 +8,60 @@
     <title>formulario</title>
 </head>
 <body>
+    <script>    
+        class FormularioAfip extends HTMLElement
+        {
+            constructor()
+            {
+                super();
     
+                this.inputNombre = document.createElement('input');
+                this.inputNombre.type = 'text';
+                this.inputNombre.placeholder = 'Ingrese el nombre del cliente';
+                
+                this.inputCuit = document.createElement('input');
+                this.inputCuit.type = 'text';
+                this.inputCuit.placeholder = 'Ingrese el CUIT del cliente';
+                
+                this.inputDom = document.createElement('input');
+                this.inputDom.type = 'text';
+                this.inputDom.placeholder = 'Ingrese el domicilio fiscal';
+    
+                this.botonGenerador = document.createElement('button');
+                this.botonGenerador.innerText = 'Generar Factura';
+    
+                this.numeroFactura = 1;
+            };
+            generarFactura()
+            {
+                alert('funciona');  
+                const ventana = window.open('');
+                ventana.document.write(`<h1>Factura ${this.numeroFactura}</h1>`);
+                this.numeroFactura++;
+            }
+
+            
+       
+            connectedCallback()
+            {
+                console.log('Formulario conectado al DOM');
+                this.appendChild(this.inputNombre);
+                this.appendChild(this.inputCuit);
+                this.appendChild(this.inputDom);
+                this.appendChild(this.botonGenerador);
+                
+                this.botonGenerador.onclick = () => this.generarFactura();
+            };   
+
+        };    
+        
+        customElements.define('x-form', FormularioAfip);
+        window.onload = () =>
+        {
+            const boleta = document.createElement('x-form');
+            document.body.appendChild(boleta);
+        };
+    </script>
 </body>
+
 </html>
