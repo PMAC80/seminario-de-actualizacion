@@ -57,11 +57,13 @@
         };    
         
         customElements.define('x-form', FormularioAfip);
-        window.onload = () =>
+
+        function main()
         {
-            const boleta = document.createElement('x-form');
+            let boleta = new FormularioAfip();
             document.body.appendChild(boleta);
         };
+        window.onload = main;
     </script>
 
 </html>

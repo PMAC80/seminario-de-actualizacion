@@ -92,9 +92,11 @@
 
     customElements.define('x-equalizer', Equalizer);
 
-    window.onload = () => 
+    function main()
     {
-        document.body.appendChild(new Equalizer());
+        let eq = new Equalizer();
+        document.body.appendChild(eq);
     };
+    window.onload = main; 
 </script>
 </html>

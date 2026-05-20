@@ -92,15 +92,18 @@ class ChatComponent extends HTMLElement
     }
 }
 customElements.define('x-chat', ChatComponent);
-window.onload = () =>
-    {
-        const chat = document.createElement('x-chat');
-        document.body.appendChild(chat);
-        chat.addMessage('Hola. ¿Cómo estás?', '11:00');
-        chat.addMessage('Todo bien.', '11:01', true);
-        chat.addMessage('¿Programando WebComponents?', '11:02');
-        chat.addMessage('Sí, intentando entenderlos.', '11:05', true);
-    };
+
+function main()
+{
+    let chat = new ChatComponent();
+    document.body.appendChild(chat);
+    chat.addMessage('Hola. ¿Cómo estás?', '11:00');
+    chat.addMessage('Todo bien.', '11:01', true);
+    chat.addMessage('¿Programando WebComponents?', '11:02');
+    chat.addMessage('Sí, intentando entenderlos.', '11:05', true);
+};
+window.onload = main;
+
 </script>
 </head>
 <body></body>
