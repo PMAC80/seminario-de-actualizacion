@@ -52,25 +52,28 @@
 
             }
 
-            this._onSliderInput = this._onSliderInput.bind(this);
         }
 
+        
         _onSliderInput(e) 
         {
             const i = this._sliders.indexOf(e.target);
             this._labels[i].innerText = e.target.value;
             this.datos[i].valor = e.target.value;
         }
-
+        
         connectedCallback() 
         {
+            this._onSliderInput = this._onSliderInput.bind(this);
+
             this._sliders.forEach(slider => 
             {
-                slider.oninput = this._onSliderInput;
+                slider.oninput = this._onSliderInput.bind(this);
             });
         }
 
-        disconnectedCallback() { 
+        disconnectedCallback() 
+        { 
             this._sliders.forEach(slider => 
             { 
                 slider.oninput = null;

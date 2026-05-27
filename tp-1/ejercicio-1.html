@@ -61,7 +61,7 @@ Independientemente de cómo sea recibidas las cadenas de texto.
 
         connectedCallback()
         {
-            this.button.onclick = () => this.onButtonClick();
+            this.button.onclick = this.onButtonClick.bind(this); 
         }
 
         disconnectedCallback()

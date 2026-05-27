@@ -47,6 +47,7 @@ class ChatComponent extends HTMLElement
         this.chatTitle.innerText = 'Chat Messages';
         this.chatContainer.appendChild(this.chatTitle);
         this.iniciado = false;
+        this.appendChild(this.chatContainer);
     }
 
     connectedCallback()
@@ -56,7 +57,11 @@ class ChatComponent extends HTMLElement
                 return;
             }
         this.iniciado = true;
-        this.appendChild(this.chatContainer);
+    }
+    
+    disconnectedCallback()
+    {
+        this.iniciado = false;
     }
 
     addMessage(texto, hora, oscuro = false)

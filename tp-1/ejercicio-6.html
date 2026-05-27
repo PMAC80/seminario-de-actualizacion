@@ -1,1 +1,41 @@
-/*Desarrolle un WebComponent que represente toda la información de los datos metereológicos de Mar del Plata tal como se muestra en la imagen. En este caso, considere agregar un método al WebComponent que le permita obtener el conjunto de todos los promedios de todas las temperaturas representadas.*/
+<!--Desarrolle un WebComponent que represente toda la información de los datos metereológicos de Mar del Plata tal como se muestra en la imagen. En este caso, considere agregar un método al WebComponent que le permita obtener el conjunto de todos los promedios de todas las temperaturas representadas.-->    
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>windChurrut</title>
+</head>
+<script>
+class Temperature extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this.innerHTML = `<h2>Temperaturas de Mar del Plata</h2>`;
+        this.data = 
+        [
+            { name: 'monday',temperature : [20, 22, 21, 19, 18, 17, 16]},
+            { name: 'tuesday',temperature : [21, 23, 22, 20, 19, 18, 17]},
+            { name: 'wednesday',temperature : [22, 24, 23, 21, 20, 19, 18]},
+            { name: 'thursday',temperature : [23, 25, 24, 22, 21, 20, 19]},
+            { name: 'friday',temperature : [24, 26, 25, 23, 22, 21, 20]},
+            { name: 'saturday',temperature : [25, 27, 26, 24, 23, 22, 21]},
+            { name: 'sunday',temperature : [26, 28, 27, 25, 24, 23, 22]}
+        ];
+        let sum = 0;
+        this.data.forEach(element => 
+        {
+            element.temperature.forEach(temp =>
+            {
+                sum += temp;
+            });
+        });
+
+    };
+}
+</script>
+<body>    
+</body>
+</html>

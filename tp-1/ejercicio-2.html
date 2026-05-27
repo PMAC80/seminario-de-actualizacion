@@ -60,7 +60,7 @@ número de reintentos.
 
         connectedCallback()
             {
-                this.button.onclick = () => this.onButtonClick();
+                this.button.onclick = this.onButtonClick.bind(this); 
             }
 
         disconnectedCallback()

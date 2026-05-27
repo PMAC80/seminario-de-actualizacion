@@ -32,6 +32,11 @@
                 this.botonGenerador.innerText = 'Generar Factura';
     
                 this.numeroFactura = 1;
+
+                this.appendChild(this.inputNombre);
+                this.appendChild(this.inputCuit);
+                this.appendChild(this.inputDom);
+                this.appendChild(this.botonGenerador);
             };
             generarFactura()
             {
@@ -40,19 +45,16 @@
                 ventana.document.write(`<h1>Factura ${this.numeroFactura}</h1>`);
                 this.numeroFactura++;
             }
-
-            
-       
+                  
             connectedCallback()
             {
-                console.log('Formulario conectado al DOM');
-                this.appendChild(this.inputNombre);
-                this.appendChild(this.inputCuit);
-                this.appendChild(this.inputDom);
-                this.appendChild(this.botonGenerador);
-                
-                this.botonGenerador.onclick = () => this.generarFactura();
+                this.botonGenerador.onclick = this.generarFactura.bind(this);
             };   
+            
+            disconnectedCallback()
+            {
+                this.botonGenerador.onclick = null;
+            };
 
         };    
         
