@@ -1,4 +1,102 @@
-/*
-7. Extienda el WebComponent desarrollado en el punto anterior, y agregue un botón que permita alternar la visualización de temperaturas de (ºC) a (ºF) y viceversa.
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperatures</title>
+</head>
 
-*/
+<body>
+</body>
+<script>
+class Temperatures extends HTMLElement 
+{
+    constructor() 
+    {
+        super();
+        this.innerHTML = `<h2>Temperaturas de Mar del Plata</h2>`;
+
+        this.data = [
+            { name: 'Monday', temperature: [20, 22, 21, 19, 18, 17, 16] },
+            { name: 'Tuesday', temperature: [21, 23, 22, 20, 19, 18, 17] },
+            { name: 'Wednesday', temperature: [22, 24, 23, 21, 20, 19, 18] },
+            { name: 'Thursday', temperature: [23, 25, 24, 22, 21, 20, 19] },
+            { name: 'Friday', temperature: [24, 26, 25, 23, 22, 21, 20] },
+            { name: 'Saturday', temperature: [25, 27, 26, 24, 23, 22, 21] },
+            { name: 'Sunday', temperature: [26, 28, 27, 25, 24, 23, 22] }
+        ];
+
+        this.isCelsius = true;
+
+        this.btnAverages = document.createElement('button');
+        this.btnAverages.innerText = 'Show Averages';
+
+        this.btnScale = document.createElement('button');
+        this.btnScale.innerText = 'Change to Fahrenheit';
+
+        this.display = document.createElement('p');
+
+        this.appendChild(this.btnAverages);
+        this.appendChild(this.btnScale);
+        this.appendChild(this.display);
+    }
+        
+    showData() 
+    {
+        let text = "";
+        
+        this.data.forEach(day => {
+            let sum = 0;
+            day.temperature.forEach(temp => {
+                let value = this.isCelsius ? temp : (temp * 9/5) + 32;
+                sum += value;
+            });
+            
+            let average = sum / day.temperature.length;
+            let unit = this.isCelsius ? "ºC" : "ºF";
+            
+            text += "Average for " + day.name + ": " + average.toFixed(1) + unit + "\n";
+        });
+
+        this.display.innerText = text;
+    }
+
+    toggleScale() 
+    {
+        this.isCelsius = !this.isCelsius;
+        
+        if (this.isCelsius) {
+            this.btnScale.innerText = 'Change to Fahrenheit';
+        } else {
+            this.btnScale.innerText = 'Change to Celsius';
+        }
+        
+        this.showData();
+    }
+        
+    connectedCallback() 
+    {
+        this.btnAverages.onclick = this.showData.bind(this);
+        this.btnScale.onclick = this.toggleScale.bind(this);
+    }
+
+    disconnectedCallback() 
+    {
+        this.btnAverages.onclick = null;
+        this.btnScale.onclick = null;
+    }
+}
+    
+customElements.define('x-tabla', Temperatures);
+
+function main() 
+{
+    let temperature = new Temperatures();
+    document.body.appendChild(temperature);
+}
+
+window.onload = main;
+</script>
+
+</html>

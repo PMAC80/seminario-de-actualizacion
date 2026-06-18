@@ -24,17 +24,60 @@ class Temperature extends HTMLElement
             { name: 'saturday',temperature : [25, 27, 26, 24, 23, 22, 21]},
             { name: 'sunday',temperature : [26, 28, 27, 25, 24, 23, 22]}
         ];
-        let sum = 0;
-        this.data.forEach(element => 
-        {
-            element.temperature.forEach(temp =>
-            {
-                sum += temp;
-            });
-        });
-
+        
+        this.btnPromedios = document.createElement('button');
+        this.btnPromedios.innerText = 'Mostrar promedios';
+        this.appendChild(this.btnPromedios);
     };
+
+    obtenerPromedios() 
+    {
+    let promedios = [];
+    this.data.forEach(dia => {
+        let suma = 0;
+        dia.temperature.forEach(temp => {
+            suma += temp;
+        });
+        promedios.push(suma / dia.temperature.length);
+    });
+    return promedios;
+    }
+
+    mostrarPromedios() 
+    {
+    const promedios = this.obtenerPromedios();
+    
+    let mensaje = "Promedios de temperatura de Mar del Plata:\n\n";
+    
+    this.data.forEach((dia, indice) => {
+        mensaje += `Promedio del ${dia.name}: ${promedios[indice].toFixed(1)}°C\n`;
+    });
+
+    alert(mensaje);
+    }
+    
+    connectedCallback() 
+    {
+    
+        this.btnPromedios.onclick = this.mostrarPromedios.bind(this);
+    }
+    
+    
+    disconnectedCallback() 
+    {
+    
+        this.btnPromedios.onclick = null;
+    }
 }
+
+customElements.define('x-tabla', Temperature);
+
+function main()
+{
+    let temperatura = new Temperature();
+    document.body.appendChild(temperatura);
+};
+window.onload = main;
 </script>
 <body>    
 </body>
