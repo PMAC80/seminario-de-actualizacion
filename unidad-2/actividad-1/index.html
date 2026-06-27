@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Calculadora MVC</title>
+    <style>
+        table, tr, td { border: 1px solid white; border-collapse: collapse; }
+        .btnDelete {
+            color: white; font-family: arial; font-weight: bold;
+            font-size: 70%; background-color: red;
+            box-shadow: 0px 5px #BB3E22; width: 100%;
+            height: 30px; border-radius: 6px; border-color: #BB3E22;
+        }
+    </style>
+</head>
+<body>
+</body>
+
+<script>
+
+// ============================================
+// MODELO
+// ============================================
+class CalculatorModel extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._display = '';
+    }
+
+    set display(new_display)
+    {
+        if (this._display !== new_display)
+        {
+            this._display = new_display;
+            this.changed();
+        }
+    }
+
+    get display()
+    {
+        return this._display;
+    }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+// ============================================
+// VISTA 
+// ============================================
+class CalculatorView extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this.table = document.createElement('table');
+
+        this.tr1 = document.createElement('tr');
+        this.tr2 = document.createElement('tr');
+        this.tr3 = document.createElement('tr');
+        this.tr4 = document.createElement('tr');
+        this.tr5 = document.createElement('tr');
+        this.tr6 = document.createElement('tr');
+
+        this.tdDisplay = document.createElement('td');
+        this.td7 = document.createElement('td');
+        this.td8 = document.createElement('td');
+        this.td9 = document.createElement('td');
+        this.tdPlus = document.createElement('td');
+        this.td4 = document.createElement('td');
+        this.td5 = document.createElement('td');
+        this.td6 = document.createElement('td');
+        this.tdMinus = document.createElement('td');
+        this.td3 = document.createElement('td');
+        this.td2 = document.createElement('td');
+        this.td1 = document.createElement('td');
+        this.tdMultiply = document.createElement('td');
+        this.td0 = document.createElement('td');
+        this.tdDot = document.createElement('td');
+        this.tdResult = document.createElement('td');
+        this.tdDivide = document.createElement('td');
+        this.tdDelete = document.createElement('td');
+
+        this._display = document.createElement('input');
+        this._display.type = 'text';
+        this._display.disabled = true;
+
+        this.btn0 = document.createElement('button');
+        this.btn1 = document.createElement('button');
+        this.btn2 = document.createElement('button');
+        this.btn3 = document.createElement('button');
+        this.btn4 = document.createElement('button');
+        this.btn5 = document.createElement('button');
+        this.btn6 = document.createElement('button');
+        this.btn7 = document.createElement('button');
+        this.btn8 = document.createElement('button');
+        this.btn9 = document.createElement('button');
+        this.btnDot = document.createElement('button');
+        this.btnPlus = document.createElement('button');
+        this.btnMinus = document.createElement('button');
+        this.btnMultiply = document.createElement('button');
+        this.btnDivide = document.createElement('button');
+        this.btnResult = document.createElement('button');
+        this.btnDelete = document.createElement('button');
+
+        this.btn0.innerText = '0';
+        this.btn1.innerText = '1';
+        this.btn2.innerText = '2';
+        this.btn3.innerText = '3';
+        this.btn4.innerText = '4';
+        this.btn5.innerText = '5';
+        this.btn6.innerText = '6';
+        this.btn7.innerText = '7';
+        this.btn8.innerText = '8';
+        this.btn9.innerText = '9';
+        this.btnDot.innerText = '.';
+        this.btnPlus.innerText = '+';
+        this.btnMinus.innerText = '-';
+        this.btnMultiply.innerText = '*';
+        this.btnDivide.innerText = '/';
+        this.btnResult.innerText = '=';
+        this.btnDelete.innerText = 'Borrar';
+        this.btnDelete.className = 'btnDelete';
+
+        this.tdDisplay.colSpan = 4;
+        this.tdDelete.colSpan = 4;
+
+        this.tdDisplay.appendChild(this._display);
+        this.tr1.appendChild(this.tdDisplay);
+
+        this.td7.appendChild(this.btn7);
+        this.td8.appendChild(this.btn8);
+        this.td9.appendChild(this.btn9);
+        this.tdPlus.appendChild(this.btnPlus);
+        this.tr2.appendChild(this.td7);
+        this.tr2.appendChild(this.td8);
+        this.tr2.appendChild(this.td9);
+        this.tr2.appendChild(this.tdPlus);
+
+        this.td4.appendChild(this.btn4);
+        this.td5.appendChild(this.btn5);
+        this.td6.appendChild(this.btn6);
+        this.tdMinus.appendChild(this.btnMinus);
+        this.tr3.appendChild(this.td4);
+        this.tr3.appendChild(this.td5);
+        this.tr3.appendChild(this.td6);
+        this.tr3.appendChild(this.tdMinus);
+
+        this.td3.appendChild(this.btn3);
+        this.td2.appendChild(this.btn2);
+        this.td1.appendChild(this.btn1);
+        this.tdMultiply.appendChild(this.btnMultiply);
+        this.tr4.appendChild(this.td3);
+        this.tr4.appendChild(this.td2);
+        this.tr4.appendChild(this.td1);
+        this.tr4.appendChild(this.tdMultiply);
+
+        this.td0.appendChild(this.btn0);
+        this.tdDot.appendChild(this.btnDot);
+        this.tdResult.appendChild(this.btnResult);
+        this.tdDivide.appendChild(this.btnDivide);
+        this.tr5.appendChild(this.td0);
+        this.tr5.appendChild(this.tdDot);
+        this.tr5.appendChild(this.tdResult);
+        this.tr5.appendChild(this.tdDivide);
+
+        this.tdDelete.appendChild(this.btnDelete);
+        this.tr6.appendChild(this.tdDelete);
+
+        this.table.appendChild(this.tr1);
+        this.table.appendChild(this.tr2);
+        this.table.appendChild(this.tr3);
+        this.table.appendChild(this.tr4);
+        this.table.appendChild(this.tr5);
+        this.table.appendChild(this.tr6);
+
+        this.appendChild(this.table);
+    }
+
+    set display(value)
+    {
+        this._display.value = value;
+    }
+
+    get display()
+    {
+        return this._display.value;
+    }
+
+    connectedCallback()
+    {
+        this.btn0.onclick = () => this._onButton('number', '0');
+        this.btn1.onclick = () => this._onButton('number', '1');
+        this.btn2.onclick = () => this._onButton('number', '2');
+        this.btn3.onclick = () => this._onButton('number', '3');
+        this.btn4.onclick = () => this._onButton('number', '4');
+        this.btn5.onclick = () => this._onButton('number', '5');
+        this.btn6.onclick = () => this._onButton('number', '6');
+        this.btn7.onclick = () => this._onButton('number', '7');
+        this.btn8.onclick = () => this._onButton('number', '8');
+        this.btn9.onclick = () => this._onButton('number', '9');
+        this.btnDot.onclick = () => this._onButton('dot', '.');
+        this.btnPlus.onclick = () => this._onButton('operator', '+');
+        this.btnMinus.onclick = () => this._onButton('operator', '-');
+        this.btnMultiply.onclick = () => this._onButton('operator', '*');
+        this.btnDivide.onclick = () => this._onButton('operator', '/');
+        this.btnResult.onclick = () => this._onButton('equals', '=');
+        this.btnDelete.onclick = () => this._onButton('clear', 'C');
+    }
+
+    disconnectedCallback()
+    {
+        this.btn0.onclick = null;
+        this.btn1.onclick = null;
+        this.btn2.onclick = null;
+        this.btn3.onclick = null;
+        this.btn4.onclick = null;
+        this.btn5.onclick = null;
+        this.btn6.onclick = null;
+        this.btn7.onclick = null;
+        this.btn8.onclick = null;
+        this.btn9.onclick = null;
+        this.btnDot.onclick = null;
+        this.btnPlus.onclick = null;
+        this.btnMinus.onclick = null;
+        this.btnMultiply.onclick = null;
+        this.btnDivide.onclick = null;
+        this.btnResult.onclick = null;
+        this.btnDelete.onclick = null;
+    }
+
+    _onButton(type, value)
+    {
+        this.dispatchEvent(new CustomEvent('request', {
+            detail: { type: type, value: value }
+        }));
+    }
+}
+
+// ============================================
+// CONTROLADOR
+// ============================================
+class CalculatorController
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+
+    disable()
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+
+    onModelChanged()
+    {
+        this._view.display = this._model.display;
+    }
+
+    onViewRequest(event)
+    {
+        const { type, value } = event.detail;
+
+        if (type === 'clear')
+        {
+            this._model.display = '';
+        }
+        else if (type === 'equals')
+        {
+            try
+            {
+                const result = eval(this._model.display);
+                this._model.display = result.toString();
+            }
+            catch (e)
+            {
+                this._model.display = 'Error';
+            }
+        }
+        else
+        {
+            this._model.display = this._model.display + value;
+        }
+    }
+}
+customElements.define('x-calculator-view', CalculatorView);
+
+// ============================================
+// MAIN FUNCTION
+// ============================================
+function main()
+{
+    let myModel = new CalculatorModel();
+    let myView = new CalculatorView();
+    let myController = new CalculatorController(myView, myModel);
+    myController.enable();
+    document.body.appendChild(myView);
+}
+
+window.onload = main;
+
+</script>
+</html>
