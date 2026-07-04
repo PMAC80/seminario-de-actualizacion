@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario AFIP</title>
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+
+class FormularioAfip extends HTMLElement
+{
+    constructor()
+    {
+        super();
+
+        this.inputNombre = document.createElement('input');
+        this.inputNombre.type = 'text';
+        this.inputNombre.placeholder = 'Ingrese el nombre del cliente';
+
+        this.inputCuit = document.createElement('input');
+        this.inputCuit.type = 'text';
+        this.inputCuit.placeholder = 'Ingrese el CUIT del cliente';
+
+        this.inputDom = document.createElement('input');
+        this.inputDom.type = 'text';
+        this.inputDom.placeholder = 'Ingrese el domicilio fiscal';
+
+        this.botonGenerador = document.createElement('button');
+        this.botonGenerador.innerText = 'Generar Factura';
+
+        this.botonPDF = document.createElement('button');
+        this.botonPDF.innerText = 'Exportar PDF';
+
+        this.numeroFactura = 1;
+
+        this.appendChild(this.inputNombre);
+        this.appendChild(this.inputCuit);
+        this.appendChild(this.inputDom);
+        this.appendChild(document.createElement("br"));
+        this.appendChild(document.createElement("br"));
+        this.appendChild(this.botonGenerador);
+        this.appendChild(this.botonPDF);
+    }
+
+    generarFactura()
+    {
+        const ventana = window.open("");
+
+        ventana.document.write(`
+            <h1>Factura ${this.numeroFactura}</h1>
+            <hr>
+            <p><b>Cliente:</b> ${this.inputNombre.value}</p>
+            <p><b>CUIT:</b> ${this.inputCuit.value}</p>
+            <p><b>Domicilio:</b> ${this.inputDom.value}</p>
+        `);
+
+        this.numeroFactura++;
+    }
+
+    exportarPDF()
+    {
+        const opciones =
+        {
+            margin: 1,
+            filename: "FacturaAFIP.pdf"
+        };
+
+        html2pdf().set(opciones).from(this).save();
+    }
+
+    connectedCallback()
+    {
+        this.botonGenerador.onclick = this.generarFactura.bind(this);
+
+        this.botonPDF.onclick = this.exportarPDF.bind(this);
+    }
+
+    disconnectedCallback()
+    {
+        this.botonGenerador.onclick = null;
+        this.botonPDF.onclick = null;
+    }
+}
+
+customElements.define("x-form", FormularioAfip);
+
+function main()
+{
+    const formulario = new FormularioAfip();
+
+    document.body.appendChild(formulario);
+}
+
+window.onload = main;
+
+</script>
+
+</body>
+</html>

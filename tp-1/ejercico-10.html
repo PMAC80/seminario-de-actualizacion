@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CSV Reader</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        .dropZone
+        {
+            width: 100%;
+            height: 300px;
+            border: 3px dashed gray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        canvas
+        {
+            margin-top:20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<script>
+
+class CSVComponent extends HTMLElement
+{
+    constructor()
+    {
+        super();
+
+        this.dropZone = document.createElement("div");
+        this.dropZone.className = "dropZone";
+        this.dropZone.innerText = "Arrastre un archivo aquí";
+
+        this.canvas = document.createElement("canvas");
+
+        this.appendChild(this.dropZone);
+        this.appendChild(this.canvas);
+    }
+
+    connectedCallback()
+    {
+        this.dropZone.ondragover = this.dragOver.bind(this);
+        this.dropZone.ondrop = this.dropFile.bind(this);
+    }
+
+    disconnectedCallback()
+    {
+        this.dropZone.ondragover = null;
+        this.dropZone.ondrop = null;
+    }
+
+    dragOver(event)
+    {
+        event.preventDefault();
+    }
+
+    dropFile(event)
+    {
+        event.preventDefault();
+
+        const file = event.dataTransfer.files[0];
+
+        const reader = new FileReader();
+
+        reader.onload = this.readCSV.bind(this);
+
+        reader.readAsText(file);
+    }
+
+    readCSV(event)
+    {
+        const text = event.target.result;
+
+        const lines = text.trim().split("\n");
+
+        let labels = [];
+        let values = [];
+
+        lines.shift();
+
+        lines.forEach(line =>
+        {
+            const data = line.split(",");
+
+            labels.push(data[0]);
+            values.push(parseFloat(data[1]));
+        });
+
+        this.drawChart(labels, values);
+    }
+
+    drawChart(labels, values)
+    {
+        new Chart(this.canvas,
+        {
+            type: "bar",
+
+            data:
+            {
+                labels: labels,
+
+                datasets:
+                [
+                    {
+                        label: "Average Temperature",
+
+                        data: values
+                    }
+                ]
+            }
+        });
+    }
+}
+
+customElements.define("x-csv", CSVComponent);
+
+function main()
+{
+    let csv = new CSVComponent();
+
+    document.body.appendChild(csv);
+}
+
+window.onload = main;
+
+</script>
+
+</body>
+</html>

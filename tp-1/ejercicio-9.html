@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Speech Component</title>
+</head>
+
+<body>
+
+</body>
+
+<script>
+
+class SpeechComponent extends HTMLElement
+{
+    constructor()
+    {
+        super();
+
+        this.button = document.createElement("button");
+        this.button.innerText = "Start Recording";
+
+        this.result = document.createElement("p");
+        this.result.innerText = "Transcript...";
+
+        this.appendChild(this.button);
+        this.appendChild(this.result);
+
+        this.recognition = new webkitSpeechRecognition();
+
+        this.recognition.lang = "es-AR";
+        this.recognition.continuous = false;
+        this.recognition.interimResults = false;
+    }
+
+    startRecognition()
+    {
+        this.recognition.start();
+    }
+
+    connectedCallback()
+    {
+        this.button.onclick = this.startRecognition.bind(this);
+
+        this.recognition.onresult = (event) =>
+        {
+            this.result.innerText =
+                event.results[0][0].transcript;
+        };
+    }
+
+    disconnectedCallback()
+    {
+        this.button.onclick = null;
+    }
+}
+
+customElements.define("x-speech", SpeechComponent);
+
+function main()
+{
+    let speech = new SpeechComponent();
+
+    document.body.appendChild(speech);
+}
+
+window.onload = main;
+
+</script>
+
+</html>
