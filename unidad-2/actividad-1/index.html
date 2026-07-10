@@ -47,6 +47,11 @@ class CalculatorModel extends EventTarget
     {
         this.dispatchEvent(new CustomEvent('changed'));
     }
+
+    calculate(expression)
+    {
+        return eval(expression);
+    }
 }
 
 // ============================================
@@ -281,15 +286,8 @@ class CalculatorController
         }
         else if (type === 'equals')
         {
-            try
-            {
-                const result = eval(this._model.display);
-                this._model.display = result.toString();
-            }
-            catch (e)
-            {
-                this._model.display = 'Error';
-            }
+            var resultado = this._model.calculate(this._model.display);
+            this._model.display = resultado.toString();
         }
         else
         {
