@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercice_one</title>
+</head>
+
+<body>
+    
+</body>
+
+<script type="text/javascript">
+
+// ==================================================================================
+// MODELO
+// ==================================================================================
+
+class Model extends EventTarget {
+    constructor() 
+    {
+        super();        
+    }
+   
+    changed() 
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+// ==================================================================================
+// VISTA
+// ==================================================================================
+class View extends HTMLElement 
+{
+    constructor() 
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 500;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+ 
+        this.appendChild(this._canvas);
+    }
+    
+    drawCross(width, height)
+    {
+        let ctx = this._canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.moveTo(0,0);
+        ctx.lineTo(width,height);
+        ctx.moveTo(0,height);
+        ctx.lineTo(width,0);
+        ctx.stroke();
+        ctx.closePath();
+    }
+    set value(x) 
+    {
+       
+    }
+   
+    get value() 
+    {
+        
+    }
+    connectedCallback() 
+    {
+       console.log('Canvas agregado...')
+       this.drawCross(this._canvas.width, this._canvas.height);
+    }
+    disconnectedCallback() 
+    {
+        
+    }
+    
+    _onSave() 
+    {
+       
+    }
+}
+customElements.define('x-view', View);
+
+// ==================================================================================
+// CONTROLADOR
+// ==================================================================================
+
+class Controller {
+    constructor(view, model) 
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+    enable() 
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+    disable() 
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+    onModelChanged() 
+    {
+        
+    }
+    onViewRequest(event) 
+    {
+       
+    }
+}
+
+// ==================================================================================
+// MAIN FUNCTION
+// ==================================================================================
+
+function main() 
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    myController.enable();
+    document.body.appendChild(myView);
+}
+window.onload = main;
+
+</script>
+
+</html>
+
+
+
+

@@ -26,14 +26,17 @@ número de reintentos.
                 super();
                 
                 this.dateInput = document.createElement('input');
+                this.dateInput.type = 'text';
+                this.dateInput.placeholder = 'Ingrese la fecha de su nacimiento';
+
                 this.button = document.createElement('button');
+                this.button.innerText = 'Validar';
+
                 this.result = document.createElement('p');
+                this.result.innerText = '';
+
                 this.reintentos = 0;
                 
-                this.dateInput.type = 'text';
-                this.dateInput.placeholder = 'Ingrese su fecha de nacimiento';
-                this.button.innerText = 'Validar';
-                this.result.innerText = '';
                 
                 this.appendChild(this.dateInput);
                 this.appendChild(this.button);

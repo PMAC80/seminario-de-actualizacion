@@ -36,20 +36,17 @@ class CalculadoraForm extends HTMLElement
 {
 	constructor()
 	{
-		//Acá hay que instanciar en primer lugar (siempre) la clase base.
         super();
-		// Tabla y estructura...
-		// createElement es un método del DOM que permite crear un nuevo elemento HTML. En este caso, se está creando una tabla para organizar los botones y la pantalla de la calculadora.
 		this.table = document.createElement('table');
-        // Filas
+        
 		this.tr1 = document.createElement('tr');
 		this.tr2 = document.createElement('tr');
 		this.tr3 = document.createElement('tr');
 		this.tr4 = document.createElement('tr');
 		this.tr5 = document.createElement('tr');
-		//lugar de display
+		
 		this.tdDisplay = document.createElement('td');
-		//columnas
+		
 		this.td7 = document.createElement('td');
 		this.td8 = document.createElement('td');
 		this.td9 = document.createElement('td');
@@ -69,15 +66,13 @@ class CalculadoraForm extends HTMLElement
 		this.tdDot = document.createElement('td');
 		this.tdResult = document.createElement('td');
 		this.tdDivide = document.createElement('td');
-		// Borrar
+		
 		this.tdDelete = document.createElement('td');
 
-		// Display (creación e instanciación)	
 		this.display = document.createElement('input');
 		this.display.type = 'text';
 		this.display.disabled = true;
 
-		// Botones
 		this.btn0 = document.createElement('button');
 		this.btn1 = document.createElement('button');
 		this.btn2 = document.createElement('button');
@@ -96,7 +91,6 @@ class CalculadoraForm extends HTMLElement
 		this.btnResult = document.createElement('button');
 		this.btnDelete = document.createElement('button');
 
-		// Texto botones
 		this.btn0.innerText = '0';
 		this.btn1.innerText = '1';
 		this.btn2.innerText = '2';
@@ -117,15 +111,12 @@ class CalculadoraForm extends HTMLElement
 
 		this.btnDelete.className = 'btnDelete';
 
-		// Colspan
 		this.tdDisplay.colSpan = 4;
 		this.tdDelete.colSpan = 4;
 
-		// Armar fila display
 		this.tdDisplay.appendChild(this.display);
 		this.tr1.appendChild(this.tdDisplay);
 
-		// Fila 7 8 9 +
 		this.td7.appendChild(this.btn7);
 		this.td8.appendChild(this.btn8);
 		this.td9.appendChild(this.btn9);
@@ -136,7 +127,6 @@ class CalculadoraForm extends HTMLElement
 		this.tr2.appendChild(this.td9);
 		this.tr2.appendChild(this.tdPlus);
 
-		// Fila 4 5 6 -
 		this.td4.appendChild(this.btn4);
 		this.td5.appendChild(this.btn5);
 		this.td6.appendChild(this.btn6);
@@ -147,18 +137,16 @@ class CalculadoraForm extends HTMLElement
 		this.tr3.appendChild(this.td6);
 		this.tr3.appendChild(this.tdMinus);
 
-		// Fila 3 2 1 *
 		this.td3.appendChild(this.btn3);
 		this.td2.appendChild(this.btn2);
 		this.td1.appendChild(this.btn1);
 		this.tdMultiply.appendChild(this.btnMultiply);
 
-		this.tr4.appendChild(this.td3);
-		this.tr4.appendChild(this.td2);
 		this.tr4.appendChild(this.td1);
+		this.tr4.appendChild(this.td2);
+		this.tr4.appendChild(this.td3);
 		this.tr4.appendChild(this.tdMultiply);
 
-		// Fila 0 . = /
 		this.td0.appendChild(this.btn0);
 		this.tdDot.appendChild(this.btnDot);
 		this.tdResult.appendChild(this.btnResult);
@@ -169,13 +157,11 @@ class CalculadoraForm extends HTMLElement
 		this.tr5.appendChild(this.tdResult);
 		this.tr5.appendChild(this.tdDivide);
 
-		// Fila borrar
 		this.tdDelete.appendChild(this.btnDelete);
 
 		this.tr6 = document.createElement('tr');
 		this.tr6.appendChild(this.tdDelete);
 
-		// Agregar filas a tabla
 		this.table.appendChild(this.tr1);
 		this.table.appendChild(this.tr2);
 		this.table.appendChild(this.tr3);
@@ -183,7 +169,6 @@ class CalculadoraForm extends HTMLElement
 		this.table.appendChild(this.tr5);
 		this.table.appendChild(this.tr6);
 
-		// Agregar tabla al componente
 		this.appendChild(this.table);
 	}
 
@@ -216,25 +201,25 @@ class CalculadoraForm extends HTMLElement
 
 	connectedCallback()
 	{
-		this.btn0.onclick = () => this.onBtn0Click();
-		this.btn1.onclick = () => this.onBtn1Click();
-		this.btn2.onclick = () => this.onBtn2Click();
-		this.btn3.onclick = () => this.onBtn3Click();
-		this.btn4.onclick = () => this.onBtn4Click();
-		this.btn5.onclick = () => this.onBtn5Click();
-		this.btn6.onclick = () => this.onBtn6Click();
-		this.btn7.onclick = () => this.onBtn7Click();
-		this.btn8.onclick = () => this.onBtn8Click();
-		this.btn9.onclick = () => this.onBtn9Click();
+		this.btn0.onclick = this.onBtn0Click.bind(this);
+		this.btn1.onclick = this.onBtn1Click.bind(this);
+		this.btn2.onclick = this.onBtn2Click.bind(this);
+		this.btn3.onclick = this.onBtn3Click.bind(this);
+		this.btn4.onclick = this.onBtn4Click.bind(this);
+		this.btn5.onclick = this.onBtn5Click.bind(this);
+		this.btn6.onclick = this.onBtn6Click.bind(this);
+		this.btn7.onclick = this.onBtn7Click.bind(this);
+		this.btn8.onclick = this.onBtn8Click.bind(this);
+		this.btn9.onclick = this.onBtn9Click.bind(this);
 
-		this.btnDot.onclick = () => this.onBtnDotClick();
-		this.btnPlus.onclick = () => this.onBtnPlusClick();
-		this.btnMinus.onclick = () => this.onBtnMinusClick();
-		this.btnMultiply.onclick = () => this.onBtnMultiplyClick();
-		this.btnDivide.onclick = () => this.onBtnDivideClick();
+		this.btnDot.onclick = this.onBtnDotClick.bind(this);
+		this.btnPlus.onclick = this.onBtnPlusClick.bind(this);
+		this.btnMinus.onclick = this.onBtnMinusClick.bind(this);
+		this.btnMultiply.onclick = this.onBtnMultiplyClick.bind(this);
+		this.btnDivide.onclick = this.onBtnDivideClick.bind(this);
 
-		this.btnResult.onclick = () => this.onBtnResultClick();
-		this.btnDelete.onclick = () => this.onBtnDeleteClick();
+		this.btnResult.onclick = this.onBtnResultClick.bind(this);
+		this.btnDelete.onclick = this.onBtnDeleteClick.bind(this);
 	}
 
 	disconnectedCallback()

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    
+</body>
+
+<script type="text/javascript">
+
+// ==================================================================================
+// MODELO
+// ==================================================================================
+
+class Model extends EventTarget {
+    constructor() 
+    {
+        super();        
+    }
+   
+    changed() 
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+// ==================================================================================
+// VISTA
+// ==================================================================================
+class View extends HTMLElement 
+{
+    constructor() 
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+
+        this.a = { x: 200, y:300 };
+        this.b = { x: 400, y:300 };
+        this.c = { x: 300, y:100 };
+
+        
+        this.appendChild(this._canvas);
+    }
+    drawTriangle()
+    {
+        let ctx = this._canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.moveTo(this.a.x, this.a.y);
+        ctx.lineTo(this.b.x, this.b.y);
+        ctx.lineTo(this.c.x, this.c.y);
+        ctx.lineTo(this.a.x, this.a.y);
+        ctx.stroke();
+        ctx.closePath();
+
+
+    }
+    set value(x) 
+    {
+       
+    }
+   
+    get value() 
+    {
+        
+    }
+    connectedCallback() 
+    {
+       console.log('Canvas agregado...')
+         this.drawTriangle();
+    }
+    disconnectedCallback() 
+    {
+        
+    }
+    
+    _onSave() 
+    {
+       
+    }
+}
+customElements.define('x-view', View);
+
+// ==================================================================================
+// CONTROLADOR
+// ==================================================================================
+
+class Controller {
+    constructor(view, model) 
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+    enable() 
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+    disable() 
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+    onModelChanged() 
+    {
+        
+    }
+    onViewRequest(event) 
+    {
+       
+    }
+}
+
+// ==================================================================================
+// MAIN FUNCTION
+// ==================================================================================
+
+function main() 
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    myController.enable();
+    document.body.appendChild(myView);
+}
+window.onload = main;
+
+</script>
+
+</html>
+
+
+
+
