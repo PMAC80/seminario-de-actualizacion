@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>drawTriangle</title>
+    <title>Document</title>
 </head>
 
-<body> </body>
+<body>
+    
+</body>
 
 <script type="text/javascript">
 
@@ -14,17 +16,11 @@
 // MODELO
 // ==================================================================================
 
-class Model extends EventTarget 
-{
+class Model extends EventTarget {
     constructor() 
     {
-        super();
-
-        this.a = { x: 200, y:300 };
-        this.b = { x: 400, y:300 };
-        this.c = { x: 300, y:100 };
+        super();        
     }
-
    
     changed() 
     {
@@ -44,23 +40,13 @@ class View extends HTMLElement
         this._canvas.width = 600;
         this._canvas.height = 500;
         this._canvas.style.border = '2px solid black';
+ 
         this.appendChild(this._canvas);
     }
-    drawTriangle(a,b,c)
+    
+    set value(x) 
     {
-        let ctx = this._canvas.getContext('2d');
-
-        ctx.beginPath();
-        ctx.moveTo(a.x, a.y);
-        ctx.lineTo(b.x, b.y);
-        ctx.lineTo(c.x, c.y);
-        ctx.closePath();
-        ctx.stroke();
-
-    }
-    set value(datos) 
-    {
-        this.drawTriangle(datos.a, datos.b, datos.c);        
+       
     }
    
     get value() 
@@ -69,7 +55,7 @@ class View extends HTMLElement
     }
     connectedCallback() 
     {
-        console.log('Canvas agregado...')
+       console.log('Canvas agregado...')
     }
     disconnectedCallback() 
     {
@@ -87,8 +73,7 @@ customElements.define('x-view', View);
 // CONTROLADOR
 // ==================================================================================
 
-class Controller 
-{
+class Controller {
     constructor(view, model) 
     {
         this._view = view;
@@ -100,7 +85,6 @@ class Controller
     {
         this._model.addEventListener('changed', this._onModelChanged);
         this._view.addEventListener('request', this._onViewRequest);
-        this.onModelChanged();
     }
     disable() 
     {
@@ -109,12 +93,7 @@ class Controller
     }
     onModelChanged() 
     {
-        this._view.value =
-        {
-            a: this._model.a,
-            b: this._model.b,
-            c: this._model.c
-        }
+        
     }
     onViewRequest(event) 
     {
