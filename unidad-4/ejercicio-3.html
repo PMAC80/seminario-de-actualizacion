@@ -1,14 +1,15 @@
+<!--Construya una función que le permita dibujar cualquier polígono cerrado ubicado en el centro del área de dibujo,
+dada una lista ordenada de puntos (x,y).
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>darwPoligon</title>
 </head>
 
-<body>
-    
-</body>
+<body></body>
 
 <script type="text/javascript">
 
@@ -19,7 +20,16 @@
 class Model extends EventTarget {
     constructor() 
     {
-        super();        
+        super();    
+        this.puntos = 
+        [
+            { x: 200, y: 150 },
+            { x: 400, y: 150 },
+            { x: 480, y: 250 },
+            { x: 420, y: 380 },
+            { x: 220, y: 380 },
+            { x: 140, y: 250 }
+        ];
     }
    
     changed() 
@@ -44,14 +54,32 @@ class View extends HTMLElement
         this.appendChild(this._canvas);
     }
     
-    set value(x) 
+    drawPolygon(puntos)
     {
-       
+        let ctx = this._canvas.getContext('2d');
+
+        ctx.beginPath();
+        ctx.moveTo(puntos[0].x,puntos[0].y);
+
+        for (let i = 1; i < puntos.length; i++) 
+        {
+            ctx.lineTo(puntos[i].x, puntos[i].y);
+        }
+        ctx.closePath();
+        ctx.stroke();
+
     }
-   
+    set value(puntos) 
+    {
+        if (puntos)
+        {
+            this._puntos = puntos;
+            this.drawPolygon(puntos);
+        }
+    }   
     get value() 
     {
-        
+        return this._puntos;    
     }
     connectedCallback() 
     {
@@ -85,6 +113,7 @@ class Controller {
     {
         this._model.addEventListener('changed', this._onModelChanged);
         this._view.addEventListener('request', this._onViewRequest);
+        this.onModelChanged();
     }
     disable() 
     {
@@ -93,7 +122,7 @@ class Controller {
     }
     onModelChanged() 
     {
-        
+        this._view.value = this._model.puntos;
     }
     onViewRequest(event) 
     {
