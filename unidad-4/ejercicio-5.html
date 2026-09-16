@@ -1,0 +1,189 @@
+<!--
+    5. Reutilizando el código del punto anterior, y empleando las primitivas de dibujado de texto. Construir un tablero
+de dardos, en donde se reparta el área del cuadrado para que entren hasta 5 círculos concéntricos. Entre el
+espacio de cada círculo, se deberá distribuir el valor de puntaje según el array: [1000, 750, 500, 100, 50] donde el
+centro representa el mayor valor.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    
+</body>
+
+<script type="text/javascript">
+
+// ==================================================================================
+// MODELO
+// ==================================================================================
+
+class Model extends EventTarget {
+    constructor(width, height) 
+    {
+        super();   
+        this._width = width;
+        this._height = height;  
+        
+        this._scores = [1000, 750, 500, 100, 50];
+        this._spacing = width / (this._scores.length * 2);
+    }
+    get scores() 
+    {
+        return this._scores;
+    }
+    get spacing() 
+    {
+        return this._spacing;
+    }
+    get width() 
+    {
+        return this._width;
+    }
+    get height() 
+    {
+        return this._height;
+    }
+   
+    changed() 
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+// ==================================================================================
+// VISTA
+// ==================================================================================
+class View extends HTMLElement 
+{
+    constructor() 
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+
+        this._canvas.style.border = '2px solid black';
+ 
+        this.appendChild(this._canvas);
+    }
+    
+
+    set value(model) 
+    {
+        this._canvas.width = model.width;
+        this._canvas.height = model.height;
+        this.drawCircles(model.width, model.height, model.scores, model.spacing);
+        this.drawPoints(model.width, model.height, model.scores, model.spacing);
+
+    }
+   
+    get value() 
+    {
+        return this._canvas;
+    }
+    
+    _canvas(width, height) 
+    {
+        this._canvas.width = width;
+        this._canvas.height = height;
+    }
+
+    drawCircles(width, height, scores, spacing)
+    {
+        const ctx = this._canvas.getContext('2d');
+
+        const centerX = width / 2;
+        const centerY = height / 2;
+                
+        for (let r = width / 2; r >= 0; r -= spacing) 
+        {
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, r, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
+    }
+
+    drawPoints(width, height, scores, spacing)
+    {
+        const ctx = this._canvas.getContext('2d');
+        const centerX = width / 2;
+        const centerY = height / 2;
+        
+        let x = centerX + (spacing / 2);
+        
+        for (let i = 0; i < scores.length; i++) 
+        {
+            ctx.fillText(scores[i], x, centerY);
+            x += spacing;
+        }
+    }
+    connectedCallback() 
+    {
+       console.log('Canvas agregado...')
+    }
+
+    disconnectedCallback() 
+    {
+        
+    }
+    
+    _onSave() 
+    {
+       
+    }
+}
+customElements.define('x-view', View);
+
+// ==================================================================================
+// CONTROLADOR
+// ==================================================================================
+
+class Controller {
+    constructor(view, model) 
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+    enable() 
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+    disable() 
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+    onModelChanged() 
+    {
+        this._view.value = this._model;
+    }
+    onViewRequest(event) 
+    {
+       
+    }
+}
+
+// ==================================================================================
+// MAIN FUNCTION
+// ==================================================================================
+
+function main() 
+{
+    let myModel = new Model(500, 500);
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    myController.enable();
+    document.body.appendChild(myView);
+    myModel.changed();
+}
+window.onload = main;
+
+</script>
+
+</html>
