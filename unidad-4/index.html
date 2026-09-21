@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio6</title>
+</head>
+<body>
+    <x-view></x-view>
+    <script>
+        alert("aca quise importar figuras");
+    </script>
+    <script src="MVCCanvas.js"></script>
+    <script src="ejercicio-6.js"></script>
+    
+    <script>
+        function main()
+        {
+            let model = new Model();
+            let view = document.querySelector('x-view');
+            let controller = new Controller(view, model);
+            controller.enable();
+            model.changed();
+        }
+        window.onload = main;
+    </script>
+</body>
+</html>

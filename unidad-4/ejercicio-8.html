@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 8</title>
+</head>
+<body>
+
+<script type="text/javascript">
+
+class Model extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._data = [
+            { percentage: 0.30, label: "Ventas" },
+            { percentage: 0.50, label: "Marketing" },
+            { percentage: 0.10, label: "I+D" },
+            { percentage: 0.10, label: "Otros" }
+        ];
+    }
+
+    get data()
+    {
+        return this._data;
+    }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+class View extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+        this.ctx = this._canvas.getContext('2d');
+        this.appendChild(this._canvas);
+    }
+
+    render(renderFunction, model)
+    {
+        this.clear();
+        renderFunction(this._canvas, model);
+    }
+
+    clear()
+    {
+        this.ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    }
+
+    connectedCallback()
+    {
+        console.log('Canvas agregado...');
+    }
+
+    disconnectedCallback()
+    {
+    }
+
+    _onSave()
+    {
+    }
+}
+customElements.define('x-view', View);
+
+class Controller
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+
+    disable()
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+
+    onModelChanged()
+    {
+        this._view.render(drawCake, this._model);
+    }
+
+    onViewRequest(event)
+    {
+    }
+}
+
+function drawCake(canvas, model)
+{
+    var ctx = canvas.getContext('2d');
+    var data = model.data;
+    var centerX = canvas.width / 2;
+    var centerY = canvas.height / 2;
+    var radius = 150;
+    var currentAngle = 0;
+
+    for (var i = 0; i < data.length; i++)
+    {
+        var sliceAngle = data[i].percentage * 2 * Math.PI;
+        var startAngle = currentAngle;
+        var endAngle = currentAngle + sliceAngle;
+
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+        ctx.closePath();
+        ctx.stroke();
+
+        var midAngle = startAngle + sliceAngle / 2;
+        var textX = centerX + Math.cos(midAngle) * radius * 0.6;
+        var textY = centerY + Math.sin(midAngle) * radius * 0.6;
+        var percentText = (data[i].percentage * 100).toFixed(0) + '%';
+        var labelText = data[i].label;
+
+        ctx.fillText(labelText, textX - 20, textY - 10);
+        ctx.fillText(percentText, textX - 10, textY + 10);
+
+        currentAngle = endAngle;
+    }
+}
+
+function main()
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    myController.enable();
+    document.body.appendChild(myView);
+    myModel.changed();
+}
+window.onload = main;
+
+</script>
+
+</body>
+</html>
