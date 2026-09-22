@@ -1,54 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>drawTriangle</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>drawTriangle</title>
+    </head>
+    
+    <body></body>
+    
+    <script type="text/javascript">
 
-<body> </body>
-
-<script type="text/javascript">
-
-// ==================================================================================
-// MODELO
-// ==================================================================================
-
-class Model extends EventTarget 
-{
-    constructor() 
+    function drawTriangle(canvas, a, b, c)
     {
-        super();
+        let ctx = canvas.getContext('2d');
 
-        this.a = { x: 200, y:300 };
-        this.b = { x: 400, y:300 };
-        this.c = { x: 300, y:100 };
-    }
-
-   
-    changed() 
-    {
-        this.dispatchEvent(new CustomEvent('changed'));
-    }
-}
-
-// ==================================================================================
-// VISTA
-// ==================================================================================
-class View extends HTMLElement 
-{
-    constructor() 
-    {
-        super();
-        this._canvas = document.createElement('canvas');
-        this._canvas.width = 600;
-        this._canvas.height = 500;
-        this._canvas.style.border = '2px solid black';
-        this.appendChild(this._canvas);
-    }
-    drawTriangle(a,b,c)
-    {
-        let ctx = this._canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.beginPath();
         ctx.moveTo(a.x, a.y);
@@ -56,90 +22,116 @@ class View extends HTMLElement
         ctx.lineTo(c.x, c.y);
         ctx.closePath();
         ctx.stroke();
+    }
 
-    }
-    set value(datos) 
+    class Model extends EventTarget
     {
-        this.drawTriangle(datos.a, datos.b, datos.c);        
-    }
-   
-    get value() 
-    {
-        
-    }
-    connectedCallback() 
-    {
-        console.log('Canvas agregado...')
-    }
-    disconnectedCallback() 
-    {
-        
-    }
-    
-    _onSave() 
-    {
-       
-    }
-}
-customElements.define('x-view', View);
-
-// ==================================================================================
-// CONTROLADOR
-// ==================================================================================
-
-class Controller 
-{
-    constructor(view, model) 
-    {
-        this._view = view;
-        this._model = model;
-        this._onModelChanged = this.onModelChanged.bind(this);
-        this._onViewRequest = this.onViewRequest.bind(this);
-    }
-    enable() 
-    {
-        this._model.addEventListener('changed', this._onModelChanged);
-        this._view.addEventListener('request', this._onViewRequest);
-        this.onModelChanged();
-    }
-    disable() 
-    {
-        this._model.removeEventListener('changed', this._onModelChanged);
-        this._view.removeEventListener('request', this._onViewRequest);
-    }
-    onModelChanged() 
-    {
-        this._view.value =
+        constructor()
         {
-            a: this._model.a,
-            b: this._model.b,
-            c: this._model.c
+            super();
+            this._a = { x: 200, y: 300 };
+            this._b = { x: 400, y: 300 };
+            this._c = { x: 300, y: 100 };
+        }
+
+        get a()
+        {
+            return this._a;
+        }
+
+        get b()
+        {
+            return this._b;
+        }
+
+        get c()
+        {
+            return this._c;
+        }
+
+        changed()
+        {
+            this.dispatchEvent(new CustomEvent('changed'));
         }
     }
-    onViewRequest(event) 
+
+    class View extends HTMLElement
     {
-       
+        constructor()
+        {
+            super();
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = 600;
+            this._canvas.height = 500;
+            this._canvas.style.border = '2px solid black';
+        }
+
+        get canvas()
+        {
+            return this._canvas;
+        }
+
+        render(model)
+        {
+            drawTriangle(this._canvas, model.a, model.b, model.c);
+        }
+
+        connectedCallback()
+        {
+            console.log('Canvas agregado...');
+            this.appendChild(this._canvas);
+        }
+
+        disconnectedCallback()
+        {
+        }
     }
-}
 
-// ==================================================================================
-// MAIN FUNCTION
-// ==================================================================================
+    customElements.define('x-view', View);
 
-function main() 
-{
-    let myModel = new Model();
-    let myView = new View();
-    let myController = new Controller(myView, myModel);
-    myController.enable();
-    document.body.appendChild(myView);
-}
-window.onload = main;
+    class Controller
+    {
+        constructor(view, model)
+        {
+            this._view = view;
+            this._model = model;
+            this._onModelChanged = this.onModelChanged.bind(this);
+            this._onViewRequest = this.onViewRequest.bind(this);
+        }
 
-</script>
+        enable()
+        {
+            this._model.addEventListener('changed', this._onModelChanged);
+            this._view.addEventListener('request', this._onViewRequest);
+            this.onModelChanged();
+        }
 
+        disable()
+        {
+            this._model.removeEventListener('changed', this._onModelChanged);
+            this._view.removeEventListener('request', this._onViewRequest);
+        }
+
+        onModelChanged()
+        {
+            this._view.render(this._model);
+        }
+
+        onViewRequest(event)
+        {
+        }
+    }
+
+    function main()
+    {
+        let myModel = new Model();
+        let myView = new View();
+        let myController = new Controller(myView, myModel);
+        myController.enable();
+        document.body.appendChild(myView);
+    }
+
+    window.onload = main;
+
+    </script>
 </html>
-
-
-
-

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Exercise 12</title>
+        <script src="../MVCCanvas.js"></script>
+        <script src="ejercicio-12.js"></script>
+    </head>
+    <body>
+        <x-view></x-view>
+        
+        <script>
+            function main()
+            {
+                let myModel = new Model();
+                let myView = document.querySelector('x-view');
+                
+                // Input para Line Width
+                let labelWidth = document.createElement('span');
+                labelWidth.textContent = ' Grosor: ';
+                myView.addControl(labelWidth);
+
+                let inputWidth = document.createElement('input');
+                inputWidth.type = 'number';
+                inputWidth.value = '2';
+                inputWidth.min = '1';
+                inputWidth.max = '50';
+                inputWidth.addEventListener('change', (e) => {
+                    myView.dispatchEvent(new CustomEvent('request', { 
+                        detail: { type: 'setOption', name: 'lineWidth', value: parseInt(e.target.value) } 
+                    }));
+                });
+                myView.addControl(inputWidth);
+
+                // Select para Line Cap
+                let labelCap = document.createElement('span');
+                labelCap.textContent = ' Tipo de línea: ';
+                myView.addControl(labelCap);
+
+                let selectCap = document.createElement('select');
+                ['butt', 'round', 'square'].forEach(cap => {
+                    let opt = document.createElement('option');
+                    opt.value = cap;
+                    opt.textContent = cap;
+                    selectCap.appendChild(opt);
+                });
+                selectCap.addEventListener('change', (e) => {
+                    myView.dispatchEvent(new CustomEvent('request', { 
+                        detail: { type: 'setOption', name: 'lineCap', value: e.target.value } 
+                    }));
+                });
+                myView.addControl(selectCap);
+
+                let myController = new Controller(myView, myModel, ejercicio12);
+                myController.enable();
+            }
+            window.onload = main;
+        </script>
+    </body>
+</html>

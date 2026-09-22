@@ -3,37 +3,29 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>drawCake</title>
+        <title>drawLines</title>
     </head>
     
     <body></body>
     
     <script type="text/javascript">
 
-    function drawCake(canvas, model)
+    function drawLines(canvas, model)
     {
         let ctx = canvas.getContext('2d');
-        let centerX = canvas.width / 2;
-        let centerY = canvas.height / 2;
-        let radius = 150;
-        let currentAngle = 0;
+        let data = model.data;
+        let startX = 50;
+        let endY = canvas.height;
 
-        for (let i = 0; i < model.data.length; i++)
+        for (let i = data.startThickness; i <= data.endThickness; i++)
         {
-            let sliceAngle = model.data[i] * 2 * Math.PI;
-
+            let x = startX + (i - 1) * data.spacing;
+            
             ctx.beginPath();
-            ctx.moveTo(centerX, centerY);
-            ctx.arc(centerX, centerY, radius, currentAngle, currentAngle + sliceAngle);
-            ctx.closePath();
+            ctx.lineWidth = i;
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, endY);
             ctx.stroke();
-
-            let midAngle = currentAngle + sliceAngle / 2;
-            ctx.fillText((model.data[i] * 100).toFixed(0) + '%', 
-                centerX + Math.cos(midAngle) * radius * 0.6, 
-                centerY + Math.sin(midAngle) * radius * 0.6);
-
-            currentAngle += sliceAngle;
         }
     }
 
@@ -42,7 +34,12 @@
         constructor()
         {
             super();
-            this._data = [0.30, 0.50, 0.10, 0.10];
+            this._data = 
+            {
+                startThickness: 1,
+                endThickness: 25,
+                spacing: 16
+            };
         }
 
         get data()
@@ -111,7 +108,7 @@
 
         onModelChanged()
         {
-            this._view.render(drawCake, this._model);
+            this._view.render(drawLines, this._model);
         }
 
         onViewRequest(event)

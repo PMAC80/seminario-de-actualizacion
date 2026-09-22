@@ -1,153 +1,134 @@
-<!--Construya una función que le permita dibujar cualquier polígono cerrado ubicado en el centro del área de dibujo,
-dada una lista ordenada de puntos (x,y).
--->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>darwPoligon</title>
-</head>
-
-<body></body>
-
-<script type="text/javascript">
-
-// ==================================================================================
-// MODELO
-// ==================================================================================
-
-class Model extends EventTarget {
-    constructor() 
-    {
-        super();    
-        this.puntos = 
-        [
-            { x: 200, y: 150 },
-            { x: 400, y: 150 },
-            { x: 480, y: 250 },
-            { x: 420, y: 380 },
-            { x: 220, y: 380 },
-            { x: 140, y: 250 }
-        ];
-    }
-   
-    changed() 
-    {
-        this.dispatchEvent(new CustomEvent('changed'));
-    }
-}
-
-// ==================================================================================
-// VISTA
-// ==================================================================================
-class View extends HTMLElement 
-{
-    constructor() 
-    {
-        super();
-        this._canvas = document.createElement('canvas');
-        this._canvas.width = 600;
-        this._canvas.height = 500;
-        this._canvas.style.border = '2px solid black';
- 
-        this.appendChild(this._canvas);
-    }
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>drawPolygon</title>
+    </head>
     
-    drawPolygon(puntos)
+    <body></body>
+    
+    <script type="text/javascript">
+
+    function drawPolygon(canvas, puntos)
     {
-        let ctx = this._canvas.getContext('2d');
+        let ctx = canvas.getContext('2d');
 
         ctx.beginPath();
-        ctx.moveTo(puntos[0].x,puntos[0].y);
+        ctx.moveTo(puntos[0].x, puntos[0].y);
 
-        for (let i = 1; i < puntos.length; i++) 
+        for (let i = 1; i < puntos.length; i++)
         {
             ctx.lineTo(puntos[i].x, puntos[i].y);
         }
         ctx.closePath();
         ctx.stroke();
-
     }
-    set value(puntos) 
+
+    class Model extends EventTarget
     {
-        if (puntos)
+        constructor()
         {
-            this._puntos = puntos;
-            this.drawPolygon(puntos);
+            super();
+            this._puntos = 
+            [
+                { x: 200, y: 150 },
+                { x: 400, y: 150 },
+                { x: 480, y: 250 },
+                { x: 420, y: 380 },
+                { x: 220, y: 380 },
+                { x: 140, y: 250 }
+            ];
         }
-    }   
-    get value() 
-    {
-        return this._puntos;    
-    }
-    connectedCallback() 
-    {
-       console.log('Canvas agregado...')
-    }
-    disconnectedCallback() 
-    {
-        
-    }
-    
-    _onSave() 
-    {
-       
-    }
-}
-customElements.define('x-view', View);
 
-// ==================================================================================
-// CONTROLADOR
-// ==================================================================================
+        get puntos()
+        {
+            return this._puntos;
+        }
 
-class Controller {
-    constructor(view, model) 
-    {
-        this._view = view;
-        this._model = model;
-        this._onModelChanged = this.onModelChanged.bind(this);
-        this._onViewRequest = this.onViewRequest.bind(this);
+        changed()
+        {
+            this.dispatchEvent(new CustomEvent('changed'));
+        }
     }
-    enable() 
-    {
-        this._model.addEventListener('changed', this._onModelChanged);
-        this._view.addEventListener('request', this._onViewRequest);
-        this.onModelChanged();
-    }
-    disable() 
-    {
-        this._model.removeEventListener('changed', this._onModelChanged);
-        this._view.removeEventListener('request', this._onViewRequest);
-    }
-    onModelChanged() 
-    {
-        this._view.value = this._model.puntos;
-    }
-    onViewRequest(event) 
-    {
-       
-    }
-}
 
-// ==================================================================================
-// MAIN FUNCTION
-// ==================================================================================
+    class View extends HTMLElement
+    {
+        constructor()
+        {
+            super();
+            this._canvas = document.createElement('canvas');
+            this._canvas.width = 600;
+            this._canvas.height = 500;
+            this._canvas.style.border = '2px solid black';
+        }
 
-function main() 
-{
-    let myModel = new Model();
-    let myView = new View();
-    let myController = new Controller(myView, myModel);
-    myController.enable();
-    document.body.appendChild(myView);
-}
-window.onload = main;
+        get canvas()
+        {
+            return this._canvas;
+        }
 
-</script>
+        render(model)
+        {
+            drawPolygon(this._canvas, model.puntos);
+        }
 
+        connectedCallback()
+        {
+            console.log('Canvas agregado...');
+            this.appendChild(this._canvas);
+        }
+
+        disconnectedCallback()
+        {
+        }
+    }
+
+    customElements.define('x-view', View);
+
+    class Controller
+    {
+        constructor(view, model)
+        {
+            this._view = view;
+            this._model = model;
+            this._onModelChanged = this.onModelChanged.bind(this);
+            this._onViewRequest = this.onViewRequest.bind(this);
+        }
+
+        enable()
+        {
+            this._model.addEventListener('changed', this._onModelChanged);
+            this._view.addEventListener('request', this._onViewRequest);
+            this.onModelChanged();
+        }
+
+        disable()
+        {
+            this._model.removeEventListener('changed', this._onModelChanged);
+            this._view.removeEventListener('request', this._onViewRequest);
+        }
+
+        onModelChanged()
+        {
+            this._view.render(this._model);
+        }
+
+        onViewRequest(event)
+        {
+        }
+    }
+
+    function main()
+    {
+        let myModel = new Model();
+        let myView = new View();
+        let myController = new Controller(myView, myModel);
+        myController.enable();
+        document.body.appendChild(myView);
+    }
+
+    window.onload = main;
+
+    </script>
 </html>
-
-
-
-

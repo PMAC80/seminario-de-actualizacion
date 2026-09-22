@@ -6,23 +6,33 @@
     <title>drawCross</title>
 </head>
 
-<body>
-    
-</body>
+<body></body>
 
 <script type="text/javascript">
 
 // ==================================================================================
 // MODELO
 // ==================================================================================
-
-class Model extends EventTarget {
-    constructor() 
+class Model extends EventTarget
+{
+    constructor()
     {
-        super();        
+        super();
+        this._width = 500;
+        this._height = 500;
     }
-   
-    changed() 
+
+    get width()
+    {
+        return this._width;
+    }
+
+    get height()
+    {
+        return this._height;
+    }
+
+    changed()
     {
         this.dispatchEvent(new CustomEvent('changed'));
     }
@@ -31,107 +41,102 @@ class Model extends EventTarget {
 // ==================================================================================
 // VISTA
 // ==================================================================================
-class View extends HTMLElement 
+class View extends HTMLElement
 {
-    constructor() 
+    constructor()
     {
         super();
         this._canvas = document.createElement('canvas');
         this._canvas.width = 500;
         this._canvas.height = 500;
         this._canvas.style.border = '2px solid black';
- 
+    }
+
+    get canvas()
+    {
+        return this._canvas;
+    }
+
+    render(model)
+    {
+        drawCross(this._canvas, model.width, model.height);
+    }
+
+    connectedCallback()
+    {
+        console.log('Canvas agregado...');
         this.appendChild(this._canvas);
     }
-    
-    drawCross(width, height)
-    {
-        let ctx = this._canvas.getContext('2d');
 
-        ctx.beginPath();
-        ctx.moveTo(0,0);
-        ctx.lineTo(width,height);
-        ctx.moveTo(0,height);
-        ctx.lineTo(width,0);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    set value(x) 
+    disconnectedCallback()
     {
-       
-    }
-   
-    get value() 
-    {
-        
-    }
-    connectedCallback() 
-    {
-       console.log('Canvas agregado...')
-       this.drawCross(this._canvas.width, this._canvas.height);
-    }
-    disconnectedCallback() 
-    {
-        
-    }
-    
-    _onSave() 
-    {
-       
     }
 }
+
 customElements.define('x-view', View);
 
 // ==================================================================================
 // CONTROLADOR
 // ==================================================================================
-
-class Controller {
-    constructor(view, model) 
+class Controller
+{
+    constructor(view, model)
     {
         this._view = view;
         this._model = model;
         this._onModelChanged = this.onModelChanged.bind(this);
         this._onViewRequest = this.onViewRequest.bind(this);
     }
-    enable() 
+
+    enable()
     {
         this._model.addEventListener('changed', this._onModelChanged);
         this._view.addEventListener('request', this._onViewRequest);
     }
-    disable() 
+
+    disable()
     {
         this._model.removeEventListener('changed', this._onModelChanged);
         this._view.removeEventListener('request', this._onViewRequest);
     }
-    onModelChanged() 
+
+    onModelChanged()
     {
-        
+        this._view.render(this._model);
     }
-    onViewRequest(event) 
+
+    onViewRequest(event)
     {
-       
     }
 }
+function drawCross(canvas, width, height)
+{
+    let ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(width, height);
+    ctx.moveTo(0, height);
+    ctx.lineTo(width, 0);
+    ctx.closePath();
+    ctx.stroke();
+}
+
 
 // ==================================================================================
 // MAIN FUNCTION
 // ==================================================================================
-
-function main() 
+function main()
 {
     let myModel = new Model();
     let myView = new View();
     let myController = new Controller(myView, myModel);
     myController.enable();
+    myModel.changed();
     document.body.appendChild(myView);
 }
+
 window.onload = main;
 
 </script>
-
 </html>
-
-
-
-
