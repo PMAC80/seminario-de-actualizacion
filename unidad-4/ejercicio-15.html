@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 15</title>
+</head>
+
+<body>
+</body>
+
+<script type="text/javascript">
+
+// ==================================================================================
+// DRAWING FUNCTIONS
+// ==================================================================================
+
+function drawPolygon(canvas, points)
+{
+    let ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+
+    for (let i = 1; i < points.length; i++)
+    {
+        ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.closePath();
+    ctx.stroke();
+}
+
+function drawPolygonGradient(canvas, points, colorStart, colorEnd)
+{
+    let ctx = canvas.getContext('2d');
+    
+    let gradient = ctx.createLinearGradient(0, 0, 600, 600);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    
+    for (let i = 1; i < points.length; i++)
+    {
+        ctx.lineTo(points[i].x, points[i].y);
+    }
+    ctx.closePath();
+    ctx.fillStyle = gradient;
+    ctx.fill();
+}
+
+// ==================================================================================
+// MODEL
+// ==================================================================================
+
+class Model extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._points = 
+        [
+            { x: 200, y: 150 },
+            { x: 400, y: 150 },
+            { x: 480, y: 250 },
+            { x: 420, y: 380 },
+            { x: 220, y: 380 },
+            { x: 140, y: 250 }
+        ];
+        this._colorStart = '#ff0000';
+        this._colorEnd = '#0000ff';
+    }
+
+    get points()
+    {
+        return this._points;
+    }
+
+    get colorStart()
+    {
+        return this._colorStart;
+    }
+
+    get colorEnd()
+    {
+        return this._colorEnd;
+    }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+// ==================================================================================
+// VIEW
+// ==================================================================================
+
+class View extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+    }
+
+    get canvas()
+    {
+        return this._canvas;
+    }
+
+    render(model)
+    {
+        drawPolygonGradient(this._canvas, model.points, model.colorStart, model.colorEnd);
+        
+        drawPolygon(this._canvas, model.points);
+    }
+
+    connectedCallback()
+    {
+        console.log('Canvas added...');
+        this.appendChild(this._canvas);
+    }
+
+    disconnectedCallback()
+    {
+    }
+}
+
+customElements.define('x-view', View);
+
+// ==================================================================================
+// CONTROLLER
+// ==================================================================================
+
+class Controller
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+        this._onViewRequest = this.onViewRequest.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+        this._view.addEventListener('request', this._onViewRequest);
+    }
+
+    disable()
+    {
+        this._model.removeEventListener('changed', this._onModelChanged);
+        this._view.removeEventListener('request', this._onViewRequest);
+    }
+
+    onModelChanged()
+    {
+        this._view.render(this._model);
+    }
+
+    onViewRequest(event)
+    {
+       
+    }
+}
+
+// ==================================================================================
+// MAIN FUNCTION
+// ==================================================================================
+
+function main()
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    
+    myController.enable();
+    myModel.changed(); 
+    
+    document.body.appendChild(myView);
+}
+
+window.onload = main;
+
+</script>
+</html>
