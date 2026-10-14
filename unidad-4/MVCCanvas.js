@@ -3,16 +3,27 @@ class Model extends EventTarget
     constructor()
     {
         super();
+        
         this._figures = [];
-        this._options = { lineWidth: 2, lineCap: 'butt' };
+        this._options = 
+        { 
+            lineWidth: 2, 
+            lineCap: 'butt' 
+        };
     }
 
-    get figures() { return this._figures; }
-    get options() { return this._options; }
+    get figures() 
+    { 
+        return this._figures;
+    }
+
+    get options() 
+    { 
+        return this._options; 
+    }
 
     addFigure(figure)
     {
-        // Anexa los valores de los inputs al JSON de la figura
         let newFigure = { ...this._options, ...figure };
         this._figures.push(newFigure);
         this.changed();
@@ -26,7 +37,6 @@ class Model extends EventTarget
 
     setOption(key, value)
     {
-        // Solo guarda el valor, NO redibuja las figuras existentes
         this._options[key] = value;
     }
 
@@ -45,6 +55,7 @@ class View extends HTMLElement
         this._canvas.width = 800;
         this._canvas.height = 500;
         this._canvas.style.border = '1px solid black';
+        this._canvas.style.backgroundColor = '#f5f5f5';
 
         this._controls = document.createElement('div');
         this._controls.style.marginTop = '10px';

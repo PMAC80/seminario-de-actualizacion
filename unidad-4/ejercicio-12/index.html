@@ -30,7 +30,7 @@
                     myView.dispatchEvent(new CustomEvent('request', { 
                         detail: { type: 'setOption', name: 'lineWidth', value: parseInt(e.target.value) } 
                     }));
-                });
+                }); 
                 myView.addControl(inputWidth);
 
                 // Select para Line Cap

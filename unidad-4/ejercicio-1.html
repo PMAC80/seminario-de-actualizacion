@@ -9,7 +9,19 @@
 <body></body>
 
 <script type="text/javascript">
+        
+function drawCross(canvas, width, height)
+{
+    let ctx = canvas.getContext('2d');
 
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(width, height);
+    ctx.moveTo(0, height);
+    ctx.lineTo(width, 0);
+    ctx.closePath();
+    ctx.stroke();
+}
 // ==================================================================================
 // MODELO
 // ==================================================================================
@@ -59,7 +71,7 @@ class View extends HTMLElement
 
     render(model)
     {
-        drawCross(this._canvas, model.width, model.height);
+        drawCross(this.canvas, model.width, model.height);
     }
 
     connectedCallback()
@@ -108,18 +120,6 @@ class Controller
     onViewRequest(event)
     {
     }
-}
-function drawCross(canvas, width, height)
-{
-    let ctx = canvas.getContext('2d');
-
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(width, height);
-    ctx.moveTo(0, height);
-    ctx.lineTo(width, 0);
-    ctx.closePath();
-    ctx.stroke();
 }
 
 

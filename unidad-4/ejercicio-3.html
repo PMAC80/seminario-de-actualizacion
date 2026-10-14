@@ -100,7 +100,6 @@
         {
             this._model.addEventListener('changed', this._onModelChanged);
             this._view.addEventListener('request', this._onViewRequest);
-            this.onModelChanged();
         }
 
         disable()
@@ -125,6 +124,7 @@
         let myView = new View();
         let myController = new Controller(myView, myModel);
         myController.enable();
+        myModel.changed();
         document.body.appendChild(myView);
     }
 

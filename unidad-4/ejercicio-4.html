@@ -27,11 +27,9 @@
 
     class Model extends EventTarget
     {
-        constructor(width, height)
+        constructor()
         {
             super();
-            this._width = width;
-            this._height = height;
         }
 
         get width()
@@ -41,7 +39,7 @@
 
         get height()
         {
-            return this._height;
+           return this._height;
         }
 
         changed()
@@ -56,6 +54,8 @@
         {
             super();
             this._canvas = document.createElement('canvas');
+            this._canvas.width = 500;
+            this._canvas.height = 500;
             this._canvas.style.border = '2px solid black';
         }
 
@@ -66,9 +66,7 @@
 
         render(model)
         {
-            this._canvas.width = model.width;
-            this._canvas.height = model.height;
-            drawCircles(this._canvas, model.width, model.height);
+            drawCircles(this._canvas, this._canvas.width, this._canvas.height);
         }
 
         connectedCallback()
@@ -98,7 +96,6 @@
         {
             this._model.addEventListener('changed', this._onModelChanged);
             this._view.addEventListener('request', this._onViewRequest);
-            this.onModelChanged();
         }
 
         disable()
@@ -119,10 +116,11 @@
 
     function main()
     {
-        let myModel = new Model(500, 500);
+        let myModel = new Model();
         let myView = new View();
         let myController = new Controller(myView, myModel);
         myController.enable();
+        myModel.changed();
         document.body.appendChild(myView);
     }
 

@@ -20,6 +20,8 @@
                 let myController = new Controller(myView, myModel);
                 
                 myController.enable();
+                myModel.changed();
+            
             }
 
             window.onload = main;
