@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 17</title>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+
+function drawCylinder(canvas, cx, cy, radius, height, colorStart, colorEnd)
+{
+    let ctx = canvas.getContext('2d');
+    let leftX = cx - radius;
+    let rightX = cx + radius;
+    let topY = cy - height / 2;
+    let bottomY = cy + height / 2;
+    let topCenterX = cx;
+    let topCenterY = topY;
+    let bottomCenterX = cx;
+    let bottomCenterY = bottomY;
+    let cylinderWidth = rightX - leftX;
+
+    let gradient = ctx.createLinearGradient(leftX, topY, rightX, bottomY);
+    gradient.addColorStop(0, colorStart);
+    gradient.addColorStop(1, colorEnd);
+    ctx.fillStyle = gradient;
+
+    ctx.beginPath();
+    ctx.rect(leftX, topY, cylinderWidth, height);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(leftX, topY);
+    ctx.lineTo(leftX, bottomY);
+    ctx.moveTo(rightX, topY);
+    ctx.lineTo(rightX, bottomY);
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(bottomCenterX, bottomCenterY);
+    ctx.scale(1, 0.3);
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.restore();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(topCenterX, topCenterY);
+    ctx.scale(1, 0.3);
+    ctx.beginPath();
+    ctx.arc(0, 0, radius, 0, Math.PI * 2);
+    ctx.restore();
+    ctx.fill();
+    ctx.stroke();
+}
+
+class Model extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._cx = 300;
+        this._cy = 250;
+        this._radius = 100;
+        this._height = 200;
+        this._colorStart = '#e0e0e0';
+        this._colorEnd = '#4a4a8a';
+    }
+
+    get cx() 
+    { 
+        return this._cx; 
+    }
+
+    get cy() 
+    { 
+        return this._cy; 
+    }
+
+    get radius() 
+    { 
+        return this._radius; 
+    }
+
+    get height() 
+    { 
+        return this._height; 
+    }
+
+    get colorStart() 
+    { 
+        return this._colorStart; 
+    }
+
+    get colorEnd() 
+    { 
+        return this._colorEnd; 
+    }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+class View extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+        this._canvas.style.backgroundColor = '#f5f5f5';
+    }
+
+    get canvas() { return this._canvas; }
+
+    render(model)
+    {
+        drawCylinder(
+            this._canvas, 
+            model.cx, 
+            model.cy, 
+            model.radius, 
+            model.height, 
+            model.colorStart, 
+            model.colorEnd
+        );
+    }
+
+    connectedCallback()
+    {
+        this.appendChild(this._canvas);
+    }
+}
+
+customElements.define('x-view', View);
+
+class Controller
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+    }
+
+    onModelChanged()
+    {
+        this._view.render(this._model);
+    }
+}
+
+function main()
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    
+    myController.enable();
+    myModel.changed();
+    document.body.appendChild(myView);
+}
+
+window.onload = main;
+
+</script>
+</html>
