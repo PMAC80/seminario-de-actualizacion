@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicio 19</title>
+</head>
+<body>
+    <x-view></x-view>
+    
+    <script src="../MVCCanvas.js"></script>
+    <script src="ejercicio-19.js"></script>
+    <script>
+        function main()
+        {
+            let myModel = new Model();
+            let myView = document.querySelector('x-view');
+            
+            let selectType = document.createElement('select');
+            selectType.innerHTML = `
+                <option value="circle">Círculo</option>
+                <option value="polygon">Polígono</option>
+                <option value="cake">CakeGraph</option>
+            `;
+            selectType.style.marginRight = '10px';
+            
+            myView.addControl(selectType);
+            
+            myModel.addEventListener('changed', () => {
+                myView.render(ejercicio19, myModel);
+            });
+            
+            myView.addEventListener('request', (event) => {
+                if (event.detail === 'load')
+                {
+                    let selectedType = selectType.value;
+                    let exampleJson = '';
+                    let promptMessage = '';
+                    
+                    switch(selectedType)
+                    {
+                        case 'circle':
+                            exampleJson = '{"x": 200, "y": 200, "radius": 50}';
+                            promptMessage = 'Datos del círculo:';
+                            break;
+                        case 'polygon':
+                            exampleJson = '{"x": 400, "y": 200, "points": [[0, -50], [50, 50], [-50, 50]]}';
+                            promptMessage = 'Datos del polígono:';
+                            break;
+                        case 'cake':
+                            exampleJson = '{"x": 400, "y": 300, "radius": 100, "data": [30, 50, 20]}';
+                            promptMessage = 'Datos del gráfico de torta:';
+                            break;
+                    }
+                    
+                    let json = prompt(promptMessage, exampleJson);
+                    if (json)
+                    {
+                        try
+                        {
+                            let figure = JSON.parse(json);
+                            figure.type = selectedType;
+                            myModel.addFigure(figure);
+                        }
+                        catch (e)
+                        {
+                            alert('JSON inválido');
+                        }
+                    }
+                }
+                else if (event.detail === 'clear')
+                {
+                    myModel.clearFigures();
+                }
+            });
+            
+            myView.render(ejercicio19, myModel);
+        }
+        
+        window.onload = main;
+    </script>
+</body>
+</html>
