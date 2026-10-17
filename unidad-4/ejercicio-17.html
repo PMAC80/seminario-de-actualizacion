@@ -16,11 +16,6 @@ function drawCylinder(canvas, cx, cy, radius, height, colorStart, colorEnd)
     let rightX = cx + radius;
     let topY = cy - height / 2;
     let bottomY = cy + height / 2;
-    let topCenterX = cx;
-    let topCenterY = topY;
-    let bottomCenterX = cx;
-    let bottomCenterY = bottomY;
-    let cylinderWidth = rightX - leftX;
 
     let gradient = ctx.createLinearGradient(leftX, topY, rightX, bottomY);
     gradient.addColorStop(0, colorStart);
@@ -28,7 +23,11 @@ function drawCylinder(canvas, cx, cy, radius, height, colorStart, colorEnd)
     ctx.fillStyle = gradient;
 
     ctx.beginPath();
-    ctx.rect(leftX, topY, cylinderWidth, height);
+    ctx.moveTo(leftX, topY);
+    ctx.lineTo(rightX, topY);
+    ctx.lineTo(rightX, bottomY);
+    ctx.lineTo(leftX, bottomY);
+    ctx.closePath();
     ctx.fill();
 
     ctx.beginPath();
@@ -39,7 +38,7 @@ function drawCylinder(canvas, cx, cy, radius, height, colorStart, colorEnd)
     ctx.stroke();
 
     ctx.save();
-    ctx.translate(bottomCenterX, bottomCenterY);
+    ctx.translate(cx, bottomY);
     ctx.scale(1, 0.3);
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, Math.PI * 2);
@@ -48,7 +47,7 @@ function drawCylinder(canvas, cx, cy, radius, height, colorStart, colorEnd)
     ctx.stroke();
 
     ctx.save();
-    ctx.translate(topCenterX, topCenterY);
+    ctx.translate(cx, topY);
     ctx.scale(1, 0.3);
     ctx.beginPath();
     ctx.arc(0, 0, radius, 0, Math.PI * 2);
@@ -70,35 +69,12 @@ class Model extends EventTarget
         this._colorEnd = '#4a4a8a';
     }
 
-    get cx() 
-    { 
-        return this._cx; 
-    }
-
-    get cy() 
-    { 
-        return this._cy; 
-    }
-
-    get radius() 
-    { 
-        return this._radius; 
-    }
-
-    get height() 
-    { 
-        return this._height; 
-    }
-
-    get colorStart() 
-    { 
-        return this._colorStart; 
-    }
-
-    get colorEnd() 
-    { 
-        return this._colorEnd; 
-    }
+    get cx() { return this._cx; }
+    get cy() { return this._cy; }
+    get radius() { return this._radius; }
+    get height() { return this._height; }
+    get colorStart() { return this._colorStart; }
+    get colorEnd() { return this._colorEnd; }
 
     changed()
     {

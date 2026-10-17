@@ -12,10 +12,11 @@
 function drawConicSquare(canvas, x, y, size, color1, color2, color3)
 {
     let ctx = canvas.getContext('2d');
+
     let centerX = x + size / 2;
     let centerY = y + size / 2;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     let gradient = ctx.createConicGradient(0, centerX, centerY);
     gradient.addColorStop(0, color1);
