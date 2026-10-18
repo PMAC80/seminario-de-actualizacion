@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 31</title>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+
+function drawSkewedRect(canvas, x, y, width, height, skewAngle)
+{
+    let ctx = canvas.getContext('2d');
+    let tanY = Math.tan(skewAngle);
+
+    // 1. Guardamos el estado original del canvas
+    ctx.save();
+
+    // 2. Movemos el origen al centro del rectángulo para que la deformación sea equilibrada
+    ctx.translate(x, y);
+
+    // 3. Aplicamos la matriz de deformación lateral vertical (Skew Y)
+    ctx.transform(1, tanY, 0, 1, 0, 0);
+    
+    // 4. Dibujamos el rectángulo centrado en el nuevo origen
+    ctx.fillStyle = '#4a4a8a';
+    ctx.fillRect(-width / 2, -height / 2, width, height);
+    
+    // 5. Restauramos el estado original
+    ctx.restore();
+}
+
+class Model extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._x = 300;
+        this._y = 250;
+        this._width = 200;
+        this._height = 100;
+        this._skewAngle = Math.PI / 6; // 30 grados
+    }
+
+    get x() { return this._x; }
+    get y() { return this._y; }
+    get width() { return this._width; }
+    get height() { return this._height; }
+    get skewAngle() { return this._skewAngle; }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+class View extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+        this._canvas.style.backgroundColor = '#f5f5f5';
+    }
+
+    get canvas() { return this._canvas; }
+
+    render(model)
+    {
+        drawSkewedRect(
+            this._canvas, 
+            model.x, 
+            model.y, 
+            model.width, 
+            model.height, 
+            model.skewAngle
+        );
+    }
+
+    connectedCallback()
+    {
+        this.appendChild(this._canvas);
+    }
+}
+
+customElements.define('x-view', View);
+
+class Controller
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+    }
+
+    onModelChanged()
+    {
+        this._view.render(this._model);
+    }
+}
+
+function main()
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    
+    myController.enable();
+    myModel.changed();
+    document.body.appendChild(myView);
+}
+
+window.onload = main;
+
+</script>
+</html>

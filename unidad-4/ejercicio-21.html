@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 21</title>
+</head>
+<body>
+</body>
+<script type="text/javascript">
+
+function drawImageScaled(canvas, img, x, y, width, height)
+{
+    let ctx = canvas.getContext('2d');
+    ctx.drawImage(img, x, y, width, height);
+}
+
+class Model extends EventTarget
+{
+    constructor()
+    {
+        super();
+        this._imageUrl = 'https://www.w3schools.com/html/pic_trulli.jpg';
+    }
+
+    get imageUrl() { return this._imageUrl; }
+
+    changed()
+    {
+        this.dispatchEvent(new CustomEvent('changed'));
+    }
+}
+
+class View extends HTMLElement
+{
+    constructor()
+    {
+        super();
+        this._canvas = document.createElement('canvas');
+        this._canvas.width = 600;
+        this._canvas.height = 500;
+        this._canvas.style.border = '2px solid black';
+    }
+
+    get canvas() { return this._canvas; }
+
+    render(model)
+    {
+        let img = new Image();
+        
+        img.onload = 
+        function()
+        {
+            drawImageScaled(this._canvas, img, 0, 0, this._canvas.width, this._canvas.height);
+        }.bind(this);
+        
+        img.src = model.imageUrl;
+    }
+
+    connectedCallback()
+    {
+        this.appendChild(this._canvas);
+    }
+}
+
+customElements.define('x-view', View);
+
+class Controller
+{
+    constructor(view, model)
+    {
+        this._view = view;
+        this._model = model;
+        this._onModelChanged = this.onModelChanged.bind(this);
+    }
+
+    enable()
+    {
+        this._model.addEventListener('changed', this._onModelChanged);
+    }
+
+    onModelChanged()
+    {
+        this._view.render(this._model);
+    }
+}
+
+function main()
+{
+    let myModel = new Model();
+    let myView = new View();
+    let myController = new Controller(myView, myModel);
+    
+    myController.enable();
+    myModel.changed();
+    document.body.appendChild(myView);
+}
+
+window.onload = main;
+
+</script>
+</html>
